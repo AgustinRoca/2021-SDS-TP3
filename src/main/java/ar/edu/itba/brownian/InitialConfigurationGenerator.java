@@ -28,7 +28,7 @@ public class InitialConfigurationGenerator {
 
     public static void main(String[] args){
         List<Particle> particles = new ArrayList<>();
-        Particle bigParticle = new Particle(BIG_MASS, BIG_RADIUS, INITIAL_BIG_POSITION, INITIAL_BIG_VELOCITY);
+        Particle bigParticle = new Particle(0, BIG_MASS, BIG_RADIUS, INITIAL_BIG_POSITION, INITIAL_BIG_VELOCITY);
         particles.add(bigParticle);
 
         for(int particleNumber = 0; particleNumber < PARTICLES_QTY; particleNumber++){
@@ -53,15 +53,14 @@ public class InitialConfigurationGenerator {
             double velocityAngle = Math.random() * 2 * Math.PI;
             double speed = Math.random() * SMALL_MAX_SPEED;
             Velocity velocity = new Velocity(speed * Math.cos(velocityAngle), speed * Math.sin(velocityAngle));
-            particles.add(new Particle(SMALL_MASS, SMALL_RADIUS, possiblePosition, velocity));
+            particles.add(new Particle(particles.size(), SMALL_MASS, SMALL_RADIUS, possiblePosition, velocity));
         }
 
         StringBuilder str = new StringBuilder();
         str.append(SPACE_SIZE).append('\n');
         str.append(PARTICLES_QTY).append('\n');
         for (Particle particle : particles){
-            str.append(
-                    particle.getPosition().getX()).append(' ').append(particle.getPosition().getY())
+            str.append(particle.getPosition().getX()).append(' ').append(particle.getPosition().getY())
                     .append(' ').append(particle.getVelocityX()).append(' ').append(particle.getVelocityY())
                     .append(' ').append(particle.getMass()).append(' ').append(particle.getRadius()).append('\n');
         }

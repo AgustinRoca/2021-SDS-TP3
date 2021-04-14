@@ -8,7 +8,11 @@ import ar.edu.itba.brownian.models.collision.VerticalWallCollision;
 import ar.edu.itba.brownian.parser.ParseResults;
 import ar.edu.itba.brownian.parser.Parser;
 
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class SimulationApp {
@@ -25,10 +29,39 @@ public class SimulationApp {
             spaceSize = results.getSpaceSize();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            throw new RuntimeException("File not Found");
+            throw new RuntimeException("File " + DEFAULT_INPUT_FILENAME + " not found");
         }
 
+        StringBuilder str = new StringBuilder();
+        str.append(spaceSize).append('\n');
+        str.append(particles.size()).append('\n');
+        str.append('\n');
+        str.append(0);
+        for (Particle particle : particles){
+            str.append(particle.getPosition().getX()).append(' ').append(particle.getPosition().getY())
+                    .append(' ').append(particle.getVelocityX()).append(' ').append(particle.getVelocityY())
+                    .append(' ').append(particle.getMass()).append(' ').append(particle.getRadius()).append('\n');
+        }
+        str.append('\n');
         List<Collision> collisions = simulate(particles, spaceSize);
+
+
+        for (Collision collision : collisions){
+            str.append(collision.getTime()).append('\n');
+            for (Particle particle : collision.getParticlesInvolved()){
+                str.append(particle.getId()).append(' ').append(particle.getVelocityX()).append(' ').append(particle.getVelocityY()).append('\n');
+            }
+            str.append('\n');
+        }
+
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(Paths.get(DEFAULT_OUTPUT_FILENAME).toAbsolutePath().toString(), false));
+            writer.write(str.toString());
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("File " + DEFAULT_INPUT_FILENAME + " not found");
+        }
 
     }
 

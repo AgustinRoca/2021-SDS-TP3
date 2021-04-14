@@ -22,7 +22,7 @@ public class Parser {
             double radius = Double.parseDouble(particleProperties[5]);
             Position position = new Position(Double.parseDouble(particleProperties[0]), Double.parseDouble(particleProperties[1]));
             Velocity velocity = new Velocity(Double.parseDouble(particleProperties[2]), Double.parseDouble(particleProperties[3]));
-            Particle particle = new Particle(mass, radius, position, velocity);
+            Particle particle = new Particle(particleNumber, mass, radius, position, velocity);
             particles.add(particle);
         }
         return new ParseResults(particles, spaceSize);

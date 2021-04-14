@@ -3,24 +3,23 @@ package ar.edu.itba.brownian.models;
 import java.util.Objects;
 
 public class Particle {
+    private final int id;
     private final double mass;
     private final double radius;
     private final Position position;
     private final Velocity velocity;
     private long collisionQty = 0;
 
-    public Particle(double mass, double radius, double x, double y, double velocityX, double velocityY) {
-        this.mass = mass;
-        this.radius = radius;
-        this.position = new Position(x, y);
-        this.velocity = new Velocity(velocityX, velocityY);
-    }
-
-    public Particle(double mass, double radius, Position position, Velocity velocity) {
+    public Particle(int id, double mass, double radius, Position position, Velocity velocity) {
+        this.id = id;
         this.mass = mass;
         this.radius = radius;
         this.position = position;
         this.velocity = velocity;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public double getMass() {
