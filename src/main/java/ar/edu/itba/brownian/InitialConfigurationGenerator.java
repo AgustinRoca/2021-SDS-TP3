@@ -26,7 +26,7 @@ public class InitialConfigurationGenerator {
     private static final int MAX_ATTEMPTS = 100;
 
 
-    public static void generate(){
+    public static void main(String[] args){
         List<Particle> particles = new ArrayList<>();
         Particle bigParticle = new Particle(BIG_MASS, BIG_RADIUS, INITIAL_BIG_POSITION, INITIAL_BIG_VELOCITY);
         particles.add(bigParticle);
