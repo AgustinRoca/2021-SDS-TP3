@@ -1,3 +1,7 @@
+package ar.edu.itba.brownian.models;
+
+import java.util.Objects;
+
 public class Particle {
     private final double mass;
     private final double radius;
@@ -82,5 +86,33 @@ public class Particle {
         velocity.setVelocityY(getVelocityY() + impulseY/mass);
         otherParticle.velocity.setVelocityX(otherParticle.getVelocityX() - impulseX/otherParticle.mass);
         otherParticle.velocity.setVelocityY(otherParticle.getVelocityY() - impulseY/otherParticle.mass);
+    }
+
+    public double timeUntilCollisionWithParticle(Particle otherParticle){
+        double relativeX = otherParticle.position.getX() - position.getX();
+        double relativeY = otherParticle.position.getY() - position.getY();
+        double relativeVelocityX = otherParticle.getVelocityX() - getVelocityX();
+        double relativeVelocityY = otherParticle.getVelocityY() - getVelocityY();
+        double velocityDotPosition = relativeX * relativeVelocityX + relativeY * relativeVelocityY;
+        double velocityDotVelocity = relativeVelocityX * relativeVelocityX + relativeVelocityY * relativeVelocityY;
+        double positionDotPosition = relativeX * relativeX + relativeY * relativeY;
+        double distance = radius + otherParticle.radius;
+        double d = velocityDotPosition * velocityDotPosition - velocityDotVelocity * (positionDotPosition - distance * distance);
+        if(velocityDotPosition >= 0 || d < 0)
+            return -1;
+        return -1 * (velocityDotPosition + Math.sqrt(d)) / velocityDotVelocity;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Particle particle = (Particle) o;
+        return position.equals(particle.position);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(position);
     }
 }

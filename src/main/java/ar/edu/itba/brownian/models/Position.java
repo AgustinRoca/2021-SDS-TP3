@@ -1,3 +1,7 @@
+package ar.edu.itba.brownian.models;
+
+import java.util.Objects;
+
 public class Position {
     private double x;
     private double y;
@@ -27,5 +31,18 @@ public class Position {
         double relativeX = x - other.x;
         double relativeY = y - other.y;
         return Math.sqrt(relativeX * relativeX + relativeY * relativeY);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Position position = (Position) o;
+        return Double.compare(position.x, x) == 0 && Double.compare(position.y, y) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
     }
 }

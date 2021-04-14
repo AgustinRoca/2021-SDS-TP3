@@ -1,3 +1,9 @@
+package ar.edu.itba.brownian;
+
+import ar.edu.itba.brownian.models.Particle;
+import ar.edu.itba.brownian.models.Position;
+import ar.edu.itba.brownian.models.Velocity;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -51,6 +57,7 @@ public class InitialConfigurationGenerator {
         }
 
         StringBuilder str = new StringBuilder();
+        str.append(SPACE_SIZE).append('\n');
         str.append(PARTICLES_QTY).append('\n');
         for (Particle particle : particles){
             str.append(

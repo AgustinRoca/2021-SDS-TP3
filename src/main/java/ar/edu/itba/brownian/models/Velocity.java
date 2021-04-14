@@ -1,3 +1,5 @@
+package ar.edu.itba.brownian.models;
+
 public class Velocity {
     private double velocityX;
     private double velocityY;
