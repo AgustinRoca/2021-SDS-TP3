@@ -50,7 +50,7 @@ public class Particle {
         return collisionQty;
     }
 
-    private void moveStraightDuringTime(double time){
+    public void moveStraightDuringTime(double time){
         position.setX(position.getX() + getVelocityX() * time);
         position.setY(position.getY() + getVelocityY() * time);
     }
@@ -67,9 +67,9 @@ public class Particle {
 
     public void bounceWithParticle(Particle otherParticle){
         boolean areTouching = position.getDistanceTo(otherParticle.position) <= radius + otherParticle.radius;
-        if(!areTouching){
-            throw new IllegalArgumentException("The particles are not touching with each other");
-        }
+//        if(!areTouching){
+//            throw new IllegalArgumentException("The particles are not touching with each other");
+//        }
 
         double relativeX = otherParticle.position.getX() - position.getX();
         double relativeY = otherParticle.position.getY() - position.getY();
@@ -85,6 +85,8 @@ public class Particle {
         velocity.setVelocityY(getVelocityY() + impulseY/mass);
         otherParticle.velocity.setVelocityX(otherParticle.getVelocityX() - impulseX/otherParticle.mass);
         otherParticle.velocity.setVelocityY(otherParticle.getVelocityY() - impulseY/otherParticle.mass);
+        collisionQty++;
+        otherParticle.collisionQty++;
     }
 
     public double timeUntilCollisionWithParticle(Particle otherParticle){

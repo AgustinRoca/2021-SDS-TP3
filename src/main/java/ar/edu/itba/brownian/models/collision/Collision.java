@@ -7,6 +7,7 @@ import java.util.List;
 public interface Collision extends Comparable<Collision>{
 
     double getTime();
+    void setTime(double time);
     List<Particle> getParticlesInvolved();
     List<Long> getParticleCollisionsCount();
     void applyCollision();

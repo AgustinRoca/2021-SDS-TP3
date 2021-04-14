@@ -18,7 +18,7 @@ import java.util.*;
 public class SimulationApp {
     private static final String DEFAULT_INPUT_FILENAME = "./data/initialSetup.txt";
     private static final String DEFAULT_OUTPUT_FILENAME = "./data/output.txt";
-    private static final double MAX_TIME = 100;
+    private static final double MAX_TIME = 10;
 
     public static void main(String[] args) {
         Set<Particle> particles;
@@ -36,14 +36,16 @@ public class SimulationApp {
         str.append(spaceSize).append('\n');
         str.append(particles.size()).append('\n');
         str.append('\n');
-        str.append(0);
+        str.append(0).append('\n');
         for (Particle particle : particles){
             str.append(particle.getPosition().getX()).append(' ').append(particle.getPosition().getY())
                     .append(' ').append(particle.getVelocityX()).append(' ').append(particle.getVelocityY())
                     .append(' ').append(particle.getMass()).append(' ').append(particle.getRadius()).append('\n');
         }
         str.append('\n');
+        System.out.println("Starting simulation...");
         List<Collision> collisions = simulate(particles, spaceSize);
+        System.out.println("Simulation ended.");
 
 
         for (Collision collision : collisions){
@@ -72,17 +74,32 @@ public class SimulationApp {
             possibleCollisions.add(getEarliestCollision(particle, particles, spaceSize));
         }
         Collections.sort(possibleCollisions);
-        while(!possibleCollisions.isEmpty() && possibleCollisions.get(0).getTime() < MAX_TIME){
+        System.out.println("First round done!");
+        double time = 0;
+        while(!possibleCollisions.isEmpty() &&  time < MAX_TIME){
             Collision nextCollision = possibleCollisions.get(0);
+            possibleCollisions.remove(nextCollision);
             if(nextCollision.isValid()) {
+                System.out.println("Next round! T=" + (time + nextCollision.getTime()));
+                for (Particle particle : particles){
+                    particle.moveStraightDuringTime(nextCollision.getTime());
+                }
+                time += nextCollision.getTime();
                 nextCollision.applyCollision();
+                for (Collision collision : possibleCollisions){
+                    collision.setTime(collision.getTime() - nextCollision.getTime());
+                }
                 confirmedCollisions.add(nextCollision);
+                if(confirmedCollisions.size() >= 2 && nextCollision.getTime() == confirmedCollisions.get(confirmedCollisions.size() - 2).getTime()){
+                    System.out.println("Same time?");
+                }
                 for(Particle particle : nextCollision.getParticlesInvolved()) {
                     possibleCollisions.add(getEarliestCollision(particle, particles, spaceSize));
+                    if(possibleCollisions.get(possibleCollisions.size() - 1).getTime() < 0)
+                        System.out.println("wTF");
                 }
+                Collections.sort(possibleCollisions); // TODO: Se podría agregar ordenado directamente
             }
-            possibleCollisions.remove(nextCollision);
-            Collections.sort(possibleCollisions); // TODO: Se podría agregar ordenado directamente
         }
         return confirmedCollisions;
     }
@@ -90,34 +107,39 @@ public class SimulationApp {
     private static Collision getEarliestCollision(Particle particle, Set<Particle> particles, double spaceSize) {
         Collision earliestCollision = horizontalWallCollision(particle, spaceSize);
         Collision verticalWallCollision = verticalWallCollision(particle, spaceSize);
+
         if (verticalWallCollision != null && (earliestCollision == null || earliestCollision.getTime() > verticalWallCollision.getTime())){
             earliestCollision = verticalWallCollision;
+        }
+        if(earliestCollision != null && earliestCollision.getTime() < 0){
         }
         for (Particle otherParticle : particles){
             double collisionTime = particle.timeUntilCollisionWithParticle(otherParticle);
             if(collisionTime != -1 && (earliestCollision == null || collisionTime < earliestCollision.getTime()))
                 earliestCollision = new ParticleCollision(collisionTime, particle, otherParticle);
         }
+        if(earliestCollision != null && earliestCollision.getTime() < 0)
+            earliestCollision.setTime(0);
         return earliestCollision;
     }
 
-    private static Collision horizontalWallCollision(Particle particle, double spaceSize) {
+    private static Collision verticalWallCollision(Particle particle, double spaceSize) {
         if(particle.getVelocityX() == 0){
             return null;
         } else if(particle.getVelocityX() > 0){
-            return new HorizontalWallCollision((spaceSize - particle.getPosition().getX() - particle.getRadius()) / particle.getVelocityX(), particle);
+            return new VerticalWallCollision((spaceSize - particle.getPosition().getX() - particle.getRadius()) / particle.getVelocityX(), particle);
         } else {
-            return new HorizontalWallCollision(-1 * (particle.getPosition().getX() - particle.getRadius()) / particle.getVelocityX(), particle);
+            return new VerticalWallCollision(-1 * (particle.getPosition().getX() - particle.getRadius()) / particle.getVelocityX(), particle);
         }
     }
 
-    private static Collision verticalWallCollision(Particle particle, double spaceSize) {
+    private static Collision horizontalWallCollision(Particle particle, double spaceSize) {
         if(particle.getVelocityY() == 0){
             return null;
         } else if(particle.getVelocityY() > 0){
-            return new VerticalWallCollision((spaceSize - particle.getPosition().getY() - particle.getRadius()) / particle.getVelocityY(), particle);
+            return new HorizontalWallCollision((spaceSize - particle.getPosition().getY() - particle.getRadius()) / particle.getVelocityY(), particle);
         } else {
-            return new VerticalWallCollision(-1 * (particle.getPosition().getY() - particle.getRadius()) / particle.getVelocityY(), particle);
+            return new HorizontalWallCollision(-1 * (particle.getPosition().getY() - particle.getRadius()) / particle.getVelocityY(), particle);
         }
     }
 }

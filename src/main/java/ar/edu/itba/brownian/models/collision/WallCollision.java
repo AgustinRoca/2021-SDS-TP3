@@ -7,7 +7,7 @@ import java.util.List;
 
 public abstract class WallCollision implements Collision {
     private final Particle particle;
-    private final double time;
+    private double time;
     private final long collisionQty;
 
     public WallCollision(double time, Particle particle) {
@@ -19,6 +19,11 @@ public abstract class WallCollision implements Collision {
     @Override
     public double getTime() {
         return time;
+    }
+
+    @Override
+    public void setTime(double time) {
+        this.time = time;
     }
 
     @Override

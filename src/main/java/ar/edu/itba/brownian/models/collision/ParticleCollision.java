@@ -7,7 +7,7 @@ import java.util.*;
 public class ParticleCollision implements Collision {
     private final List<Particle> particlesInvolved;
     private final List<Long> particlesInvolvedCollisionsCount;
-    private final double time;
+    private double time;
 
 
     public ParticleCollision(double time, Particle particle, Particle otherParticle) {
@@ -23,6 +23,11 @@ public class ParticleCollision implements Collision {
     @Override
     public double getTime() {
         return time;
+    }
+
+    @Override
+    public void setTime(double time) {
+        this.time = time;
     }
 
     @Override

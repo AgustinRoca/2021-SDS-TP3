@@ -14,7 +14,7 @@ import java.util.List;
 
 public class InitialConfigurationGenerator {
     public static double SPACE_SIZE = 6;
-    public static int PARTICLES_QTY = 140;
+    public static int PARTICLES_QTY = 110;
     public static double SMALL_RADIUS = 0.2;
     public static double BIG_RADIUS = 0.7;
     public static double SMALL_MASS = 0.9;
@@ -37,8 +37,8 @@ public class InitialConfigurationGenerator {
             int attempts = 0;
             while(!isValid){
                 isValid = true;
-                double possibleX = SMALL_RADIUS + Math.random() * (SPACE_SIZE - SMALL_RADIUS);
-                double possibleY = SMALL_RADIUS + Math.random() * (SPACE_SIZE - SMALL_RADIUS);
+                double possibleX = SMALL_RADIUS + Math.random() * (SPACE_SIZE - 2*SMALL_RADIUS);
+                double possibleY = SMALL_RADIUS + Math.random() * (SPACE_SIZE - 2*SMALL_RADIUS);
                 possiblePosition = new Position(possibleX, possibleY);
                 for(Particle particle: particles){
                     if(possiblePosition.getDistanceTo(particle.getPosition()) < SMALL_RADIUS + particle.getRadius()){

@@ -24,4 +24,9 @@ public class Velocity {
     public void setVelocityY(double velocityY) {
         this.velocityY = velocityY;
     }
+
+    @Override
+    public String toString() {
+        return "(" + velocityX + ", " + velocityY + ")";
+    }
 }

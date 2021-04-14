@@ -13,9 +13,9 @@ public class Parser {
 
     public static ParseResults parse(String path) throws FileNotFoundException {
         Scanner scanner = new Scanner(new File(path));
+        double spaceSize = Double.parseDouble(scanner.nextLine().trim());
         int particlesQty = Integer.parseInt(scanner.nextLine().trim());
         Set<Particle> particles = new HashSet<>(particlesQty);
-        double spaceSize = Double.parseDouble(scanner.nextLine().trim());
         for(int particleNumber = 0; particleNumber < particlesQty; particleNumber++){
             String[] particleProperties = scanner.nextLine().trim().split(" ", PROPERTIES_QTY);
             double mass = Double.parseDouble(particleProperties[4]);
