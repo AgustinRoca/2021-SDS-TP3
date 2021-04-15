@@ -1,27 +1,44 @@
 package ar.edu.itba.brownian.models.collision;
 
 import ar.edu.itba.brownian.models.Particle;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-public interface Collision extends Comparable<Collision>{
+public abstract class Collision implements Comparable<Collision>, CollisionApplier{
+    private double time;
+    private final Map<Particle, Long> particleToCollisionsMap = new HashMap<>();
 
-    double getTime();
-    void setTime(double time);
-    List<Particle> getParticlesInvolved();
-    List<Long> getParticleCollisionsCount();
-    void applyCollision();
+    public Collision(double time, List<Particle> particlesInvolved) {
+        this.time = time;
+        for (Particle particle : particlesInvolved) {
+            particleToCollisionsMap.put(particle, particle.getCollisionQty());
+        }
+    }
+
+    public double getTime(){
+        return time;
+    }
+
+    public void setTime(double time){
+        this.time = time;
+    }
+
+    public Set<Particle> getParticlesInvolved(){
+        return particleToCollisionsMap.keySet();
+    }
 
     @Override
-    default int compareTo(Collision o){
+    public int compareTo(Collision o){
         return Double.compare(getTime(), o.getTime());
     }
 
-    default boolean isValid(){
-        List<Particle> particles = getParticlesInvolved();
-        List<Long> collisionsCounts = getParticleCollisionsCount();
-        for (int i = 0; i < particles.size(); i++) {
-            if (particles.get(i).getCollisionQty() != collisionsCounts.get(i))
+    public boolean isValid(){
+        for (Particle particle : particleToCollisionsMap.keySet()){
+            if(particle.getCollisionQty() != particleToCollisionsMap.get(particle))
                 return false;
         }
         return true;

@@ -2,7 +2,7 @@ package ar.edu.itba.brownian.models.collision;
 
 import ar.edu.itba.brownian.models.Particle;
 
-public class VerticalWallCollision extends WallCollision{
+public class VerticalWallCollision extends WallCollision {
 
     public VerticalWallCollision(double time, Particle particle) {
         super(time, particle);
@@ -10,7 +10,8 @@ public class VerticalWallCollision extends WallCollision{
 
     @Override
     public void applyCollision() {
-        Particle particle = getParticlesInvolved().iterator().next();
-        particle.bounceWithVerticalWall();
+        for (Particle particle : getParticlesInvolved()){
+            particle.bounceWithVerticalWall();
+        }
     }
 }

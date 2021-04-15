@@ -10,7 +10,8 @@ public class HorizontalWallCollision extends WallCollision{
 
     @Override
     public void applyCollision() {
-        Particle particle = getParticlesInvolved().iterator().next();
-        particle.bounceWithHorizontalWall();
+        for (Particle particle : getParticlesInvolved()){
+            particle.bounceWithHorizontalWall();
+        }
     }
 }
