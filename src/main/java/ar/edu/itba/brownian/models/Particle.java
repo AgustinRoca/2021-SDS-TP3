@@ -66,10 +66,10 @@ public class Particle {
     }
 
     public void bounceWithParticle(Particle otherParticle){
-        boolean areTouching = Double.compare(position.getDistanceTo(otherParticle.position), radius + otherParticle.radius) <= 0;
-        if(!areTouching){
-            throw new IllegalArgumentException("The particles are not touching with each other");
-        }
+//        boolean areTouching = Double.compare(position.getDistanceTo(otherParticle.position), radius + otherParticle.radius) <= 0;
+//        if(!areTouching){
+//            throw new IllegalArgumentException("The particles are not touching with each other");
+//        }
 
         double relativeX = otherParticle.position.getX() - position.getX();
         double relativeY = otherParticle.position.getY() - position.getY();
@@ -87,21 +87,6 @@ public class Particle {
         otherParticle.velocity.setVelocityY(otherParticle.getVelocityY() - impulseY/otherParticle.mass);
         collisionQty++;
         otherParticle.collisionQty++;
-    }
-
-    public double timeUntilCollisionWithParticle(Particle otherParticle){
-        double relativeX = otherParticle.position.getX() - position.getX();
-        double relativeY = otherParticle.position.getY() - position.getY();
-        double relativeVelocityX = otherParticle.getVelocityX() - getVelocityX();
-        double relativeVelocityY = otherParticle.getVelocityY() - getVelocityY();
-        double velocityDotPosition = relativeX * relativeVelocityX + relativeY * relativeVelocityY;
-        double velocityDotVelocity = relativeVelocityX * relativeVelocityX + relativeVelocityY * relativeVelocityY;
-        double positionDotPosition = relativeX * relativeX + relativeY * relativeY;
-        double distance = radius + otherParticle.radius;
-        double d = velocityDotPosition * velocityDotPosition - velocityDotVelocity * (positionDotPosition - distance * distance);
-        if(velocityDotPosition >= 0 || d < 0)
-            return -1;
-        return -1 * (velocityDotPosition + Math.sqrt(d)) / velocityDotVelocity;
     }
 
     @Override
