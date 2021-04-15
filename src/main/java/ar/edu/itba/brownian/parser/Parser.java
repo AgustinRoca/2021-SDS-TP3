@@ -16,10 +16,10 @@ public class Parser {
         Set<Particle> particles = new HashSet<>(particlesQty);
         for(int particleNumber = 0; particleNumber < particlesQty; particleNumber++){
             String[] particleProperties = scanner.nextLine().trim().split(" ", ParticleProperties.values().length);
-            double mass = Double.parseDouble(particleProperties[ParticleProperties.MASS.order]);
-            double radius = Double.parseDouble(particleProperties[ParticleProperties.RADIUS.order]);
-            Position position = new Position(Double.parseDouble(particleProperties[ParticleProperties.POSITION_X.order]), Double.parseDouble(particleProperties[ParticleProperties.POSITION_Y.order]));
-            Velocity velocity = new Velocity(Double.parseDouble(particleProperties[ParticleProperties.VELOCITY_X.order]), Double.parseDouble(particleProperties[ParticleProperties.VELOCITY_Y.order]));
+            double mass = Double.parseDouble(particleProperties[ParticleProperties.MASS.ordinal()]);
+            double radius = Double.parseDouble(particleProperties[ParticleProperties.RADIUS.ordinal()]);
+            Position position = new Position(Double.parseDouble(particleProperties[ParticleProperties.POSITION_X.ordinal()]), Double.parseDouble(particleProperties[ParticleProperties.POSITION_Y.ordinal()]));
+            Velocity velocity = new Velocity(Double.parseDouble(particleProperties[ParticleProperties.VELOCITY_X.ordinal()]), Double.parseDouble(particleProperties[ParticleProperties.VELOCITY_Y.ordinal()]));
             Particle particle = new Particle(particleNumber, mass, radius, position, velocity);
             particles.add(particle);
         }
@@ -27,22 +27,12 @@ public class Parser {
     }
 
     private enum ParticleProperties {
-        ID(0),
-        POSITION_X(1),
-        POSITION_Y(2),
-        VELOCITY_X(3),
-        VELOCITY_Y(4),
-        MASS(5),
-        RADIUS(6);
-
-        private final int order;
-
-        ParticleProperties(int order) {
-            this.order = order;
-        }
-
-        public int getOrder() {
-            return order;
-        }
+        ID,
+        POSITION_X,
+        POSITION_Y,
+        VELOCITY_X,
+        VELOCITY_Y,
+        MASS,
+        RADIUS
     }
 }
