@@ -1,1 +1,1 @@
-# TP3 de la materia Simulacion de sistemas del ITBA
+# TP3 de la materia Simulación de sistemas del ITBA

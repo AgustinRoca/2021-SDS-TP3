@@ -13,15 +13,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InitialConfigurationGenerator {
-    public static double SPACE_SIZE = 6;
-    public static int PARTICLES_QTY = 10;
-    public static double SMALL_RADIUS = 0.2;
-    public static double BIG_RADIUS = 0.7;
-    public static double SMALL_MASS = 0.9;
-    public static double BIG_MASS = 2;
-    public static double SMALL_MAX_SPEED = 2;
-    public static Position INITIAL_BIG_POSITION = new Position(SPACE_SIZE/2, SPACE_SIZE/2);
-    public static Velocity INITIAL_BIG_VELOCITY = new Velocity(0,0);
+    public static final double SPACE_SIZE = 6;
+    public static final int PARTICLES_QTY = 10;
+    public static final double SMALL_RADIUS = 0.2;
+    public static final double BIG_RADIUS = 0.7;
+    public static final double SMALL_MASS = 0.9;
+    public static final double BIG_MASS = 2;
+    public static final double SMALL_MAX_SPEED = 2;
+    public static final Position INITIAL_BIG_POSITION = new Position(SPACE_SIZE/2, SPACE_SIZE/2);
+    public static final Velocity INITIAL_BIG_VELOCITY = new Velocity(0,0);
     private static final String DEFAULT_INPUT_FILENAME = "./data/initialSetup.txt";
     private static final int MAX_ATTEMPTS = 10000;
 
@@ -60,10 +60,7 @@ public class InitialConfigurationGenerator {
         str.append(SPACE_SIZE).append('\n');
         str.append(PARTICLES_QTY).append('\n');
         for (Particle particle : particles){
-            str.append(particle.getId()).append(' ')
-                    .append(particle.getPosition().getX()).append(' ').append(particle.getPosition().getY())
-                    .append(' ').append(particle.getVelocityX()).append(' ').append(particle.getVelocityY())
-                    .append(' ').append(particle.getMass()).append(' ').append(particle.getRadius()).append('\n');
+            str.append(particle.toFileString());
         }
 
         // check file

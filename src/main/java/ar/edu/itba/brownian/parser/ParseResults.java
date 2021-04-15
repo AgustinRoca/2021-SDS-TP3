@@ -32,10 +32,7 @@ public class ParseResults {
         str.append('\n');
         str.append(0).append('\n');
         for (Particle particle : particles){
-            str.append(particle.getId()).append(' ')
-                    .append(particle.getPosition().getX()).append(' ').append(particle.getPosition().getY())
-                    .append(' ').append(particle.getVelocityX()).append(' ').append(particle.getVelocityY())
-                    .append(' ').append(particle.getMass()).append(' ').append(particle.getRadius()).append('\n');
+            str.append(particle.toFileString());
         }
         str.append('\n');
         return str.toString();

@@ -44,10 +44,6 @@ public class Particle implements Comparable<Particle>{
         return position;
     }
 
-    public Velocity getVelocity() {
-        return velocity;
-    }
-
     public double getVelocityX() {
         return velocity.getVelocityX();
     }
@@ -76,11 +72,6 @@ public class Particle implements Comparable<Particle>{
     }
 
     public void bounceWithParticle(Particle otherParticle){
-//        boolean areTouching = Double.compare(position.getDistanceTo(otherParticle.position), radius + otherParticle.radius) <= 0;
-//        if(!areTouching){
-//            throw new IllegalArgumentException("The particles are not touching with each other");
-//        }
-
         double relativeX = otherParticle.position.getX() - position.getX();
         double relativeY = otherParticle.position.getY() - position.getY();
         double relativeVelocityX = otherParticle.getVelocityX() - getVelocityX();
@@ -97,6 +88,13 @@ public class Particle implements Comparable<Particle>{
         otherParticle.velocity.setVelocityY(otherParticle.getVelocityY() - impulseY/otherParticle.mass);
         collisionQty++;
         otherParticle.collisionQty++;
+    }
+
+    public String toFileString(){
+        return String.valueOf(id) + ' ' +
+                getPosition().getX() + ' ' + getPosition().getY() +
+                ' ' + getVelocityX() + ' ' + getVelocityY() +
+                ' ' + getMass() + ' ' + getRadius() + '\n';
     }
 
     @Override

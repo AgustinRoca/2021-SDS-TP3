@@ -1,7 +1,6 @@
 package ar.edu.itba.brownian;
 
 import ar.edu.itba.brownian.models.Particle;
-import ar.edu.itba.brownian.models.Velocity;
 import ar.edu.itba.brownian.models.collision.Collision;
 import ar.edu.itba.brownian.models.collision.HorizontalWallCollision;
 import ar.edu.itba.brownian.models.collision.ParticleCollision;
@@ -183,7 +182,7 @@ public class SimulationApp {
 
     private static class SimulationRecord {
         private final double time;
-        Set<Particle> particlesStates;
+        private final Set<Particle> particlesStates;
 
         public SimulationRecord(double time, Set<Particle> particlesStates) {
             this.time = time;
