@@ -1,7 +1,6 @@
 package ar.edu.itba.brownian.models.collision;
 
 import ar.edu.itba.brownian.models.Particle;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.HashMap;
 import java.util.List;
