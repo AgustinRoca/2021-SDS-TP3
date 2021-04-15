@@ -21,4 +21,20 @@ public class ParseResults {
     public double getSpaceSize() {
         return spaceSize;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder str = new StringBuilder();
+        str.append(spaceSize).append('\n');
+        str.append(particles.size()).append('\n');
+        str.append('\n');
+        str.append(0).append('\n');
+        for (Particle particle : particles){
+            str.append(particle.getPosition().getX()).append(' ').append(particle.getPosition().getY())
+                    .append(' ').append(particle.getVelocityX()).append(' ').append(particle.getVelocityY())
+                    .append(' ').append(particle.getMass()).append(' ').append(particle.getRadius()).append('\n');
+        }
+        str.append('\n');
+        return str.toString();
+    }
 }
