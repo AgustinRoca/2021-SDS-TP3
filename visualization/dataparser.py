@@ -76,4 +76,5 @@ def parse_output_file(output_filepath):
 
     ofile.close()
 
+    simdata.events.sort(key = lambda e:e.time)
     return simdata
