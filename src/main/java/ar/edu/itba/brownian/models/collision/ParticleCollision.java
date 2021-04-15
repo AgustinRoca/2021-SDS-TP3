@@ -1,12 +1,13 @@
 package ar.edu.itba.brownian.models.collision;
 
 import ar.edu.itba.brownian.models.Particle;
+import com.sun.istack.internal.NotNull;
 
 import java.util.*;
 
 public class ParticleCollision extends Collision {
 
-    public ParticleCollision(double time, Particle particle, Particle otherParticle) {
+    public ParticleCollision(double time, @NotNull Particle particle, @NotNull Particle otherParticle) {
         super(time, Arrays.asList(particle, otherParticle));
     }
 

@@ -2,16 +2,13 @@ package ar.edu.itba.brownian.models.collision;
 
 import ar.edu.itba.brownian.models.Particle;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public abstract class Collision implements Comparable<Collision>, CollisionApplier{
     private double time;
     private final Map<Particle, Long> particleToCollisionsMap = new HashMap<>();
 
-    public Collision(double time, List<Particle> particlesInvolved) {
+    public Collision(double time, Collection<Particle> particlesInvolved) {
         this.time = time;
         for (Particle particle : particlesInvolved) {
             particleToCollisionsMap.put(particle, particle.getCollisionQty());

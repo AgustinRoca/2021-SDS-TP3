@@ -7,6 +7,6 @@ import java.util.Collections;
 public abstract class WallCollision extends Collision {
 
     public WallCollision(double time, Particle particle) {
-        super(time, Collections.singletonList(particle));
+        super(time, Collections.singleton(particle));
     }
 }
