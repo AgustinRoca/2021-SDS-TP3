@@ -1,6 +1,6 @@
 package ar.edu.itba.brownian.models.collision;
 
 @FunctionalInterface
-public interface CollisionApplier {
+interface CollisionApplier {
     void applyCollision();
 }
