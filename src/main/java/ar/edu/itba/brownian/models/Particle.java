@@ -66,10 +66,10 @@ public class Particle {
     }
 
     public void bounceWithParticle(Particle otherParticle){
-        boolean areTouching = position.getDistanceTo(otherParticle.position) <= radius + otherParticle.radius;
-//        if(!areTouching){
-//            throw new IllegalArgumentException("The particles are not touching with each other");
-//        }
+        boolean areTouching = Double.compare(position.getDistanceTo(otherParticle.position), radius + otherParticle.radius) <= 0;
+        if(!areTouching){
+            throw new IllegalArgumentException("The particles are not touching with each other");
+        }
 
         double relativeX = otherParticle.position.getX() - position.getX();
         double relativeY = otherParticle.position.getY() - position.getY();
@@ -109,11 +109,11 @@ public class Particle {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Particle particle = (Particle) o;
-        return position.equals(particle.position);
+        return id == particle.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(position);
+        return Objects.hash(id);
     }
 }

@@ -43,9 +43,7 @@ public class SimulationApp {
                     .append(' ').append(particle.getMass()).append(' ').append(particle.getRadius()).append('\n');
         }
         str.append('\n');
-        System.out.println("Starting simulation...");
         List<Collision> collisions = simulate(particles, spaceSize);
-        System.out.println("Simulation ended.");
 
 
         for (Collision collision : collisions){
@@ -74,13 +72,11 @@ public class SimulationApp {
             possibleCollisions.add(getEarliestCollision(particle, particles, spaceSize));
         }
         Collections.sort(possibleCollisions);
-        System.out.println("First round done!");
         double time = 0;
         while(!possibleCollisions.isEmpty() &&  time < MAX_TIME){
             Collision nextCollision = possibleCollisions.get(0);
             possibleCollisions.remove(nextCollision);
             if(nextCollision.isValid()) {
-                System.out.println("Next round! T=" + (time + nextCollision.getTime()));
                 for (Particle particle : particles){
                     particle.moveStraightDuringTime(nextCollision.getTime());
                 }
@@ -90,13 +86,8 @@ public class SimulationApp {
                     collision.setTime(collision.getTime() - nextCollision.getTime());
                 }
                 confirmedCollisions.add(nextCollision);
-                if(confirmedCollisions.size() >= 2 && nextCollision.getTime() == confirmedCollisions.get(confirmedCollisions.size() - 2).getTime()){
-                    System.out.println("Same time?");
-                }
                 for(Particle particle : nextCollision.getParticlesInvolved()) {
                     possibleCollisions.add(getEarliestCollision(particle, particles, spaceSize));
-                    if(possibleCollisions.get(possibleCollisions.size() - 1).getTime() < 0)
-                        System.out.println("wTF");
                 }
                 Collections.sort(possibleCollisions); // TODO: Se podría agregar ordenado directamente
             }

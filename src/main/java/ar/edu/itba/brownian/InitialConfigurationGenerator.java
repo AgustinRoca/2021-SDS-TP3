@@ -14,7 +14,7 @@ import java.util.List;
 
 public class InitialConfigurationGenerator {
     public static double SPACE_SIZE = 6;
-    public static int PARTICLES_QTY = 110;
+    public static int PARTICLES_QTY = 130;
     public static double SMALL_RADIUS = 0.2;
     public static double BIG_RADIUS = 0.7;
     public static double SMALL_MASS = 0.9;
@@ -23,7 +23,7 @@ public class InitialConfigurationGenerator {
     public static Position INITIAL_BIG_POSITION = new Position(SPACE_SIZE/2, SPACE_SIZE/2);
     public static Velocity INITIAL_BIG_VELOCITY = new Velocity(0,0);
     private static final String DEFAULT_INPUT_FILENAME = "./data/initialSetup.txt";
-    private static final int MAX_ATTEMPTS = 100;
+    private static final int MAX_ATTEMPTS = 10000;
 
 
     public static void main(String[] args){
