@@ -14,7 +14,7 @@ import java.util.List;
 
 public class InitialConfigurationGenerator {
     public static double SPACE_SIZE = 6;
-    public static int PARTICLES_QTY = 130;
+    public static int PARTICLES_QTY = 10;
     public static double SMALL_RADIUS = 0.2;
     public static double BIG_RADIUS = 0.7;
     public static double SMALL_MASS = 0.9;
@@ -60,7 +60,8 @@ public class InitialConfigurationGenerator {
         str.append(SPACE_SIZE).append('\n');
         str.append(PARTICLES_QTY).append('\n');
         for (Particle particle : particles){
-            str.append(particle.getPosition().getX()).append(' ').append(particle.getPosition().getY())
+            str.append(particle.getId()).append(' ')
+                    .append(particle.getPosition().getX()).append(' ').append(particle.getPosition().getY())
                     .append(' ').append(particle.getVelocityX()).append(' ').append(particle.getVelocityY())
                     .append(' ').append(particle.getMass()).append(' ').append(particle.getRadius()).append('\n');
         }

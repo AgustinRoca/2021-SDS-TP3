@@ -1,8 +1,10 @@
 package ar.edu.itba.brownian.models;
 
+import com.sun.istack.internal.NotNull;
+
 import java.util.Objects;
 
-public class Particle {
+public class Particle implements Comparable<Particle>{
     private final int id;
     private final double mass;
     private final double radius;
@@ -10,6 +12,14 @@ public class Particle {
     private final Velocity velocity;
     private long collisionQty = 0;
 
+    public Particle(@NotNull Particle particle){
+        id = particle.id;
+        mass = particle.mass;
+        radius = particle.radius;
+        position = new Position(particle.position.getX(), particle.position.getY());
+        velocity = new Velocity(particle.getVelocityX(), particle.getVelocityY());
+        collisionQty = particle.collisionQty;
+    }
     public Particle(int id, double mass, double radius, Position position, Velocity velocity) {
         this.id = id;
         this.mass = mass;
@@ -100,5 +110,10 @@ public class Particle {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public int compareTo(Particle o) {
+        return Integer.compare(id, o.id);
     }
 }

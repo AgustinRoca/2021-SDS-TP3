@@ -35,11 +35,13 @@ public class SimulationApp {
         StringBuilder str = new StringBuilder(results.toString());
         for (SimulationRecord record : records){
             str.append(record.time).append('\n');
-            for (Integer particleId : record.idToVelocityChange.keySet()){
+            for (Particle particle : record.particlesStates){
                 str
-                        .append(particleId).append(' ')
-                        .append(record.idToVelocityChange.get(particleId).getVelocityX()).append(' ')
-                        .append(record.idToVelocityChange.get(particleId).getVelocityY()).append('\n');
+                        .append(particle.getId()).append(' ')
+                        .append(particle.getPosition().getX()).append(' ')
+                        .append(particle.getPosition().getY()).append(' ')
+                        .append(particle.getVelocityX()).append(' ')
+                        .append(particle.getVelocityY()).append('\n');
             }
             str.append('\n');
         }
@@ -61,7 +63,10 @@ public class SimulationApp {
 
         // First round: Calculate first collisions of every particle
         for (Particle particle : particles){
-            possibleCollisions.add(getEarliestCollision(particle, particles, spaceSize));
+            Collision collision = getEarliestCollision(particle, particles, spaceSize);
+            if(collision != null) {
+                possibleCollisions.add(collision);
+            }
         }
         Collections.sort(possibleCollisions); // Sort ascending by time
 
@@ -72,6 +77,7 @@ public class SimulationApp {
             possibleCollisions.remove(nextCollision);
 
             if(nextCollision.isValid()) {
+                System.out.println("Collision at time = " + (time + nextCollision.getTime()));
                 // Actualizo las posiciones de todas las particulas
                 for (Particle particle : particles){
                     particle.moveStraightDuringTime(nextCollision.getTime());
@@ -85,15 +91,21 @@ public class SimulationApp {
                     collision.setTime(collision.getTime() - nextCollision.getTime());
                 }
 
-                Map<Integer, Velocity> idToNewVelocity = new HashMap<>();
+                Set<Particle> particlesStates = new HashSet<>();
                 for(Particle particle : nextCollision.getParticlesInvolved()) {
                     // Documento las nuevas velocidades que tendrán
-                    idToNewVelocity.put(particle.getId(), particle.getVelocity());
+                    particlesStates.add(new Particle(particle));
 
                     // Calculo nuevos choques, pero solo los de las particulas involucradas en el choque
-                    possibleCollisions.add(getEarliestCollision(particle, particles, spaceSize));
+                    Collision newCollision = getEarliestCollision(particle, particles, spaceSize);
+                    if(newCollision.getTime() < 0 ){
+                        System.out.println("Tenes un evento en tiempo: " + nextCollision.getTime() + "\n"
+                        + "");
+                    }
+                    possibleCollisions.add(newCollision);
+
                 }
-                records.add(new SimulationRecord(time, idToNewVelocity));
+                records.add(new SimulationRecord(time, particlesStates));
                 Collections.sort(possibleCollisions); // TODO: Se podría agregar ordenado directamente
             }
         }
@@ -171,11 +183,11 @@ public class SimulationApp {
 
     private static class SimulationRecord {
         private final double time;
-        private final Map<Integer, Velocity> idToVelocityChange;
+        Set<Particle> particlesStates;
 
-        public SimulationRecord(double time, Map<Integer, Velocity> idToVelocityChange) {
+        public SimulationRecord(double time, Set<Particle> particlesStates) {
             this.time = time;
-            this.idToVelocityChange = idToVelocityChange;
+            this.particlesStates = particlesStates;
         }
     }
 }
