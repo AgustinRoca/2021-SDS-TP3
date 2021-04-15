@@ -76,7 +76,6 @@ public class SimulationApp {
             possibleCollisions.remove(nextCollision);
 
             if(nextCollision.isValid()) {
-                System.out.println("Collision at time = " + (time + nextCollision.getTime()));
                 // Actualizo las posiciones de todas las particulas
                 for (Particle particle : particles){
                     particle.moveStraightDuringTime(nextCollision.getTime());
@@ -97,18 +96,30 @@ public class SimulationApp {
 
                     // Calculo nuevos choques, pero solo los de las particulas involucradas en el choque
                     Collision newCollision = getEarliestCollision(particle, particles, spaceSize);
-                    if(newCollision.getTime() < 0 ){
-                        System.out.println("Tenes un evento en tiempo: " + nextCollision.getTime() + "\n"
-                        + "");
-                    }
-                    possibleCollisions.add(newCollision);
+                    orderedAdd(possibleCollisions, newCollision);
 
                 }
                 records.add(new SimulationRecord(time, particlesStates));
-                Collections.sort(possibleCollisions); // TODO: Se podría agregar ordenado directamente
             }
         }
         return records;
+    }
+
+    private static void orderedAdd(List<Collision> collisions, Collision collision) {
+        ListIterator<Collision> itr = collisions.listIterator();
+        while(true) {
+            if (!itr.hasNext()) {
+                itr.add(collision);
+                return;
+            }
+
+            Collision elementInList = itr.next();
+            if (elementInList.compareTo(collision) > 0) {
+                itr.previous();
+                itr.add(collision);
+                return;
+            }
+        }
     }
 
     private static Collision getEarliestCollision(Particle particle, Set<Particle> particles, double spaceSize) {
@@ -127,28 +138,34 @@ public class SimulationApp {
             }
         }
 
+        if(earliestCollision != null && earliestCollision.getTime() < 0){
+            earliestCollision.setTime(0);
+        }
+
         return earliestCollision;
     }
 
     private static Collision earliestParticleCollision(Particle particle, Set<Particle> particles){
         ParticleCollision earliestCollision = null;
         for (Particle otherParticle : particles) {
-            double relativeX = otherParticle.getPosition().getX() - particle.getPosition().getX();
-            double relativeY = otherParticle.getPosition().getY() - particle.getPosition().getY();
-            double relativeVelocityX = otherParticle.getVelocityX() - particle.getVelocityX();
-            double relativeVelocityY = otherParticle.getVelocityY() - particle.getVelocityY();
-            double distance = particle.getRadius() + otherParticle.getRadius();
+            if(!particle.equals(otherParticle)) {
+                double relativeX = otherParticle.getPosition().getX() - particle.getPosition().getX();
+                double relativeY = otherParticle.getPosition().getY() - particle.getPosition().getY();
+                double relativeVelocityX = otherParticle.getVelocityX() - particle.getVelocityX();
+                double relativeVelocityY = otherParticle.getVelocityY() - particle.getVelocityY();
+                double distance = particle.getRadius() + otherParticle.getRadius();
 
-            double velocityDotPosition = relativeX * relativeVelocityX + relativeY * relativeVelocityY;
-            double velocityDotVelocity = relativeVelocityX * relativeVelocityX + relativeVelocityY * relativeVelocityY;
-            double positionDotPosition = relativeX * relativeX + relativeY * relativeY;
-            double d = velocityDotPosition * velocityDotPosition - velocityDotVelocity * (positionDotPosition - distance * distance);
+                double velocityDotPosition = relativeX * relativeVelocityX + relativeY * relativeVelocityY;
+                double velocityDotVelocity = relativeVelocityX * relativeVelocityX + relativeVelocityY * relativeVelocityY;
+                double positionDotPosition = relativeX * relativeX + relativeY * relativeY;
+                double d = velocityDotPosition * velocityDotPosition - velocityDotVelocity * (positionDotPosition - distance * distance);
 
-            if (!(velocityDotPosition >= 0 || d < 0)) {
-                double collisionTime = -1 * (velocityDotPosition + Math.sqrt(d)) / velocityDotVelocity;
+                if (!(velocityDotPosition >= 0 || d < 0)) {
+                    double collisionTime = -1 * (velocityDotPosition + Math.sqrt(d)) / velocityDotVelocity;
 
-                if (earliestCollision == null || collisionTime < earliestCollision.getTime())
-                    earliestCollision = new ParticleCollision(collisionTime, particle, otherParticle);
+                    if (earliestCollision == null || collisionTime < earliestCollision.getTime())
+                        earliestCollision = new ParticleCollision(collisionTime, particle, otherParticle);
+                }
             }
         }
         return earliestCollision;
