@@ -42,7 +42,7 @@ def update_func(time, *fargs):
     global ax
     simdata.update_particles_on_time()
     patch_collection.set_paths(get_circles_list(simdata))
-    ax.set_title(f"Particles:{simdata.particle_count}  Time:{simdata.time}", fontdict={'fontsize': 20})
+    ax.set_title(get_title(simdata), fontdict={'fontsize': 20})
     return patch_collection    
 
 def gen_time(delta_time):
@@ -50,10 +50,12 @@ def gen_time(delta_time):
     while True:
         time += delta_time
         yield time
+def get_title(simdata):
+    return f"Particles:{simdata.particle_count}  Time:{simdata.time:.2f}"
 
 ax=plt.gca()
 ax.margins(0.01)
-ax.set_title(f"Particles:{simdata.particle_count}  Time:{simdata.time}", fontdict={'fontsize': 20})
+ax.set_title(get_title(simdata), fontdict={'fontsize': 20})
 ax.figure.set_size_inches((12, 12))
 minor_ticks_x = np.arange(0, simdata.sim_side + 1, 1)
 minor_ticks_y = np.arange(0, simdata.sim_side + 1, 1)
