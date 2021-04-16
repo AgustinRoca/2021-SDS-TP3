@@ -29,7 +29,11 @@ public class SimulationApp {
             throw new RuntimeException("File " + DEFAULT_INPUT_FILENAME + " not found");
         }
 
-        List<SimulationRecord> records = simulate(results.getParticles(), results.getSpaceSize());
+        Set<Particle> particles = new HashSet<>();
+        for (Particle particle : results.getParticles()){
+            particles.add(new Particle(particle));
+        }
+        List<SimulationRecord> records = simulate(particles, results.getSpaceSize());
 
         StringBuilder str = new StringBuilder(results.toString());
         for (SimulationRecord record : records){
@@ -76,25 +80,26 @@ public class SimulationApp {
             possibleCollisions.remove(nextCollision);
 
             if(nextCollision.isValid()) {
-                // Actualizo las posiciones de todas las particulas
+                // Move every particle to current state
                 for (Particle particle : particles){
                     particle.moveStraightDuringTime(nextCollision.getTime());
                 }
                 time += nextCollision.getTime();
 
+                // Change velocities of involved particles
                 nextCollision.applyCollision();
 
-                // Le aviso al resto de los choques que paso cierta cantidad de tiempo
+                // Update the remaining time of other collisions
                 for (Collision collision : possibleCollisions){
                     collision.setTime(collision.getTime() - nextCollision.getTime());
                 }
 
                 Set<Particle> particlesStates = new HashSet<>();
                 for(Particle particle : nextCollision.getParticlesInvolved()) {
-                    // Documento las nuevas velocidades que tendrán
+                    // Record the change of velocities
                     particlesStates.add(new Particle(particle));
 
-                    // Calculo nuevos choques, pero solo los de las particulas involucradas en el choque
+                    // Calculate new possible collisions
                     Collision newCollision = getEarliestCollision(particle, particles, spaceSize);
                     orderedAdd(possibleCollisions, newCollision);
 
