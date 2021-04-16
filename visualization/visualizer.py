@@ -36,7 +36,6 @@ def get_circles_list(simdata):
         p = simdata.particles[k]
         circle = plt.Circle((p.x, p.y), p.radius)
         annotations.append(plt.annotate(k, (p.x, p.y), ha='center', va='center'))
-        plt.axis('scaled')
         circles.append(circle)
     return circles
 
@@ -84,4 +83,5 @@ ani = FuncAnimation(
     interval=int(DELTA_TIME*1000),
     blit=False
 )
+plt.axis('scaled')
 plt.show()
