@@ -17,32 +17,43 @@ class SimData:
             self.particles[pid].x += self.particles[pid].vx * self.delta_time
             self.particles[pid].y += self.particles[pid].vy * self.delta_time
 
+        self.update_particles_on_event()
+        # update time
+        self.time += self.delta_time
+
+    def update_particles_on_event(self):
+        """ Check no events where left behind """
+        while (self.last_event < len(self.events) - 1 and self.time > self.events[self.last_event + 1].time):
+            self.__update_particles_on_event_helper()
+            # update last event
+            self.last_event += 1
         """ 
             check if there are events left and
             if one occur between last update and now 
         """
-        if (self.last_event < len(self.events) - 1 and
+        while (self.last_event < len(self.events) - 1 and
             self.time < self.events[self.last_event + 1].time and
                 self.time + self.delta_time >= self.events[self.last_event + 1].time):
-            for p in self.events[self.last_event+1].particles:
-                # update speeds
-                self.particles[p.id].vx = p.vx
-                self.particles[p.id].vy = p.vy
-
-                # calculate time between event and current time
-                delta_with_event = (
-                    (self.time + self.delta_time) -
-                    self.events[self.last_event + 1].time
-                )
-                # update particle position
-                self.particles[p.id].x = p.x + \
-                    self.particles[p.id].vx * delta_with_event
-                self.particles[p.id].y = p.y + \
-                    self.particles[p.id].vy * delta_with_event
+            self.__update_particles_on_event_helper()
             # update last event
             self.last_event += 1
-        # update time
-        self.time += self.delta_time
+
+    def __update_particles_on_event_helper(self):
+        for p in self.events[self.last_event+1].particles:
+            # update speeds
+            self.particles[p.id].vx = p.vx
+            self.particles[p.id].vy = p.vy
+
+            # calculate time between event and current time
+            delta_with_event = (
+                (self.time + self.delta_time) -
+                self.events[self.last_event + 1].time
+            )
+            # update particle position
+            self.particles[p.id].x = p.x + \
+                self.particles[p.id].vx * delta_with_event
+            self.particles[p.id].y = p.y + \
+                self.particles[p.id].vy * delta_with_event
 
 
 class CollideEvent:
@@ -96,7 +107,7 @@ def parse_output_file(output_filepath):
     print(line)
     line = ofile.readline()
     while line and line != '\n' and line != '':
-        event = CollideEvent(time=float(line),particles=[])
+        event = CollideEvent(time=float(line), particles=[])
         line = ofile.readline()
         while line != '\n' and line != '':
             line = line.strip().split(" ")
