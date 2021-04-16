@@ -35,7 +35,8 @@ def get_circles_list(simdata):
     for k in simdata.particles:
         p = simdata.particles[k]
         circle = plt.Circle((p.x, p.y), p.radius)
-        annotations.append(plt.annotate(k, (p.x, p.y), ha='center'))
+        annotations.append(plt.annotate(k, (p.x, p.y), ha='center', va='center'))
+        plt.axis('scaled')
         circles.append(circle)
     return circles
 
