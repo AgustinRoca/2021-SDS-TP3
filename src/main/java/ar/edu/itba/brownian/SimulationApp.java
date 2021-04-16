@@ -29,7 +29,11 @@ public class SimulationApp {
             throw new RuntimeException("File " + DEFAULT_INPUT_FILENAME + " not found");
         }
 
-        List<SimulationRecord> records = simulate(results.getParticles(), results.getSpaceSize());
+        Set<Particle> particles = new HashSet<>();
+        for (Particle particle : results.getParticles()){
+            particles.add(new Particle(particle));
+        }
+        List<SimulationRecord> records = simulate(particles, results.getSpaceSize());
 
         StringBuilder str = new StringBuilder(results.toString());
         for (SimulationRecord record : records){

@@ -96,7 +96,7 @@ def parse_output_file(output_filepath):
     print(line)
     line = ofile.readline()
     while line and line != '\n' and line != '':
-        event = CollideEvent(time=float(line),particles=[])
+        event = CollideEvent(time=float(line), particles=[])
         line = ofile.readline()
         while line != '\n' and line != '':
             line = line.strip().split(" ")

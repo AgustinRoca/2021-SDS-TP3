@@ -27,33 +27,44 @@ print("Parsing data")
 simdata = dataparser.parse_output_file(OUTPUT_PATH)
 simdata.delta_time = DELTA_TIME
 print("Data parsed")
+annotations = []
 
 
 def get_circles_list(simdata):
     circles = []
     for k in simdata.particles:
         p = simdata.particles[k]
-        circles.append(plt.Circle((p.x, p.y), p.radius))
+        circle = plt.Circle((p.x, p.y), p.radius)
+        annotations.append(plt.annotate(k, (p.x, p.y), ha='center'))
+        circles.append(circle)
     return circles
+
 
 def update_func(time, *fargs):
     global simdata
     global patch_collection
     global ax
     simdata.update_particles_on_time()
+    for annotation in annotations:
+        annotation.remove()
+    annotations[:] = []
     patch_collection.set_paths(get_circles_list(simdata))
     ax.set_title(get_title(simdata), fontdict={'fontsize': 20})
     return patch_collection    
 
+
 def gen_time(delta_time):
-    time=0
+    time = 0
     while True:
         time += delta_time
         yield time
+
+
 def get_title(simdata):
     return f"Particles:{simdata.particle_count}  Time:{simdata.time:.2f}"
 
-ax=plt.gca()
+
+ax = plt.gca()
 ax.margins(0.01)
 ax.set_title(get_title(simdata), fontdict={'fontsize': 20})
 ax.figure.set_size_inches((12, 12))
@@ -62,16 +73,14 @@ minor_ticks_y = np.arange(0, simdata.sim_side + 1, 1)
 ax.set_xticks(minor_ticks_x, minor=True)
 ax.set_yticks(minor_ticks_y, minor=True)
 
-
-
-patch_collection=clt.PatchCollection(get_circles_list(simdata))
+patch_collection = clt.PatchCollection(get_circles_list(simdata))
 ax.add_collection(patch_collection)
 
-ani=FuncAnimation(
+ani = FuncAnimation(
     plt.gcf(), update_func,
-    frames = lambda: gen_time(DELTA_TIME),
-    save_count = SAVE_COUNT,
-    interval = int(DELTA_TIME*1000),
+    frames=lambda: gen_time(DELTA_TIME),
+    save_count=SAVE_COUNT,
+    interval=int(DELTA_TIME*1000),
     blit=False
 )
 plt.show()
