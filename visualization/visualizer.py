@@ -83,5 +83,8 @@ ani = FuncAnimation(
     interval=int(DELTA_TIME*1000),
     blit=False
 )
+
 plt.axis('scaled')
+plt.xlim([0, simdata.sim_side])
+plt.ylim([0, simdata.sim_side])
 plt.show()
