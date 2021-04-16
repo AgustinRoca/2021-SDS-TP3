@@ -1,12 +1,48 @@
 class SimData:
-    def __init__(self, sim_side=0, particle_count=0, particles={}, events=[]):
+    def __init__(self, sim_side=0, particle_count=0, particles={}, events=[], time=0, delta_time=0, last_event=0):
         self.sim_side = sim_side
         self.particle_count = particle_count
         self.particles = particles
         self.events = events
+        self.time = time
+        self.delta_time = delta_time
+        self.last_event = last_event
 
     def __repr__(self):
         return f"{{ sim_side:{self.sim_side}, particle_count:{self.particle_count},\n particles:{self.particles}, \n events:{self.events} }}"
+
+    def update_particles_on_time(self):
+        # update all particles with mru(movimiento rectilineo uniforme)
+        for pid in self.particles:
+            self.particles[pid].x += self.particles[pid].vx * self.delta_time
+            self.particles[pid].y += self.particles[pid].vy * self.delta_time
+
+        """ 
+            check if there are events left and
+            if one occur between last update and now 
+        """
+        if (self.last_event < len(self.events) - 1 and
+            self.time < self.events[self.last_event + 1].time and
+                self.time + self.delta_time >= self.events[self.last_event + 1].time):
+            for p in self.events[self.last_event+1].particles:
+                # update speeds
+                self.particles[p.id].vx = p.vx
+                self.particles[p.id].vy = p.vy
+
+                # calculate time between event and current time
+                delta_with_event = (
+                    (self.time + self.delta_time) -
+                    self.events[self.last_event + 1].time
+                )
+                # update particle position
+                self.particles[p.id].x = p.x + \
+                    self.particles[p.id].vx * delta_with_event
+                self.particles[p.id].y = p.y + \
+                    self.particles[p.id].vy * delta_with_event
+            # update last event
+            self.last_event += 1
+        # update time
+        self.time += self.delta_time
 
 
 class CollideEvent:
@@ -76,5 +112,5 @@ def parse_output_file(output_filepath):
 
     ofile.close()
 
-    simdata.events.sort(key = lambda e:e.time)
+    simdata.events.sort(key=lambda e: e.time)
     return simdata
