@@ -76,25 +76,26 @@ public class SimulationApp {
             possibleCollisions.remove(nextCollision);
 
             if(nextCollision.isValid()) {
-                // Actualizo las posiciones de todas las particulas
+                // Move every particle to current state
                 for (Particle particle : particles){
                     particle.moveStraightDuringTime(nextCollision.getTime());
                 }
                 time += nextCollision.getTime();
 
+                // Change velocities of involved particles
                 nextCollision.applyCollision();
 
-                // Le aviso al resto de los choques que paso cierta cantidad de tiempo
+                // Update the remaining time of other collisions
                 for (Collision collision : possibleCollisions){
                     collision.setTime(collision.getTime() - nextCollision.getTime());
                 }
 
                 Set<Particle> particlesStates = new HashSet<>();
                 for(Particle particle : nextCollision.getParticlesInvolved()) {
-                    // Documento las nuevas velocidades que tendrán
+                    // Record the change of velocities
                     particlesStates.add(new Particle(particle));
 
-                    // Calculo nuevos choques, pero solo los de las particulas involucradas en el choque
+                    // Calculate new possible collisions
                     Collision newCollision = getEarliestCollision(particle, particles, spaceSize);
                     orderedAdd(possibleCollisions, newCollision);
 
