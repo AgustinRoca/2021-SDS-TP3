@@ -27,27 +27,34 @@ print("Parsing data")
 simdata = dataparser.parse_output_file(OUTPUT_PATH)
 simdata.delta_time = DELTA_TIME
 print("Data parsed")
-annotations = []
-
 
 def get_circles_list(simdata):
     circles = []
     for k in simdata.particles:
         p = simdata.particles[k]
         circle = plt.Circle((p.x, p.y), p.radius)
-        annotations.append(plt.annotate(k, (p.x, p.y), ha='center', va='center'))
         circles.append(circle)
     return circles
 
+def get_annotations(simdata):
+    annotations = {}
+    for k in simdata.particles:
+        p = simdata.particles[k]
+        annotations[k] = plt.annotate(k, (p.x, p.y), ha='center', va='center')
+    return annotations
+
+def update_annotations(simdata,annotations):
+    for k in simdata.particles:
+        p = simdata.particles[k]
+        annotations[k].set_position((p.x,p.y))
 
 def update_func(time, *fargs):
     global simdata
     global patch_collection
     global ax
+    global annotations
     simdata.update_particles_on_time()
-    for annotation in annotations:
-        annotation.remove()
-    annotations[:] = []
+    update_annotations(simdata,annotations)
     patch_collection.set_paths(get_circles_list(simdata))
     ax.set_title(get_title(simdata), fontdict={'fontsize': 20})
     return patch_collection    
@@ -74,6 +81,7 @@ ax.set_xticks(minor_ticks_x, minor=True)
 ax.set_yticks(minor_ticks_y, minor=True)
 
 patch_collection = clt.PatchCollection(get_circles_list(simdata))
+annotations = get_annotations(simdata)
 ax.add_collection(patch_collection)
 
 ani = FuncAnimation(
