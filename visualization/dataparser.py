@@ -1,3 +1,5 @@
+import copy
+
 class SimData:
     def __init__(self, sim_side=0, particle_count=0, particles=None, events=None, time=0, delta_time=0, last_event=0):
         self.sim_side = sim_side
@@ -55,6 +57,11 @@ class SimData:
             self.particles[p.id].y = p.y + \
                 self.particles[p.id].vy * delta_with_event
 
+    def restart(self):
+        for p in self.events[0].particles:
+            self.particles[p.id] = copy.deepcopy(p)
+        self.time = 0
+        self.last_event = 0
 
 class CollideEvent:
     def __init__(self, time=0, particles=None):
@@ -101,7 +108,7 @@ def parse_output_file(output_filepath):
             float(line[5]), float(line[6])
         )
         event.particles.append(particle)
-        simdata.particles[particle.id] = particle
+        simdata.particles[particle.id] = copy.deepcopy(particle)
         line = ofile.readline()
     simdata.events.append(event)
     print(line)

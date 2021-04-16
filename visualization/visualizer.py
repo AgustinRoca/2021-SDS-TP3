@@ -5,6 +5,7 @@ import numpy as np
 import dataparser
 import os
 import argparse
+import math
 
 # Constants
 DATA_PATH = os.path.join("..", "data")
@@ -12,6 +13,8 @@ OUTPUT_PATH = os.path.join(DATA_PATH, "output.txt")
 
 DELTA_TIME = 0.01
 SAVE_COUNT = 100
+REPEAT_DELAY = 1000
+REPEAT = True
 
 
 argp = argparse.ArgumentParser(description="Particle collision visualizer")
@@ -48,24 +51,19 @@ def update_annotations(simdata,annotations):
         p = simdata.particles[k]
         annotations[k].set_position((p.x,p.y))
 
-def update_func(time, *fargs):
+def update_func(frame, *fargs):
     global simdata
     global patch_collection
     global ax
     global annotations
-    simdata.update_particles_on_time()
+    if frame == 0:
+        simdata.restart()
+    else:
+        simdata.update_particles_on_time()
     update_annotations(simdata,annotations)
     patch_collection.set_paths(get_circles_list(simdata))
     ax.set_title(get_title(simdata), fontdict={'fontsize': 20})
     return patch_collection    
-
-
-def gen_time(delta_time):
-    time = 0
-    while True:
-        time += delta_time
-        yield time
-
 
 def get_title(simdata):
     return f"Particles:{simdata.particle_count}  Time:{simdata.time:.2f}"
@@ -84,11 +82,17 @@ patch_collection = clt.PatchCollection(get_circles_list(simdata))
 annotations = get_annotations(simdata)
 ax.add_collection(patch_collection)
 
+# calcualate save count
+last_event = simdata.events[-1]
+SAVE_COUNT = math.ceil(last_event.time / simdata.delta_time)
+
 ani = FuncAnimation(
     plt.gcf(), update_func,
-    frames=lambda: gen_time(DELTA_TIME),
+    frames=SAVE_COUNT,
     save_count=SAVE_COUNT,
     interval=int(DELTA_TIME*1000),
+    repeat_delay=REPEAT_DELAY,
+    repeat=REPEAT,
     blit=False
 )
 
