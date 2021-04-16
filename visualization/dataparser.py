@@ -1,9 +1,9 @@
 class SimData:
-    def __init__(self, sim_side=0, particle_count=0, particles={}, events=[], time=0, delta_time=0, last_event=0):
+    def __init__(self, sim_side=0, particle_count=0, particles=None, events=None, time=0, delta_time=0, last_event=0):
         self.sim_side = sim_side
         self.particle_count = particle_count
-        self.particles = particles
-        self.events = events
+        self.particles = particles if particles != None else {}
+        self.events = events if events != None else []
         self.time = time
         self.delta_time = delta_time
         self.last_event = last_event
@@ -46,9 +46,9 @@ class SimData:
 
 
 class CollideEvent:
-    def __init__(self, time=0, particles=[]):
+    def __init__(self, time=0, particles=None):
         self.time = time
-        self.particles = particles
+        self.particles = particles if particles != None else []
 
     def __repr__(self):
         return f"{{time:{self.time}, particles:{self.particles}}}"
@@ -96,7 +96,7 @@ def parse_output_file(output_filepath):
     print(line)
     line = ofile.readline()
     while line and line != '\n' and line != '':
-        event = CollideEvent(time=float(line))
+        event = CollideEvent(time=float(line),particles=[])
         line = ofile.readline()
         while line != '\n' and line != '':
             line = line.strip().split(" ")

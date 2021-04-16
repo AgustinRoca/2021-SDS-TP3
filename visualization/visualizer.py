@@ -11,7 +11,7 @@ DATA_PATH = os.path.join("..", "data")
 OUTPUT_PATH = os.path.join(DATA_PATH, "output.txt")
 
 DELTA_TIME = 0.01
-SAVE_COUNT = 1000
+SAVE_COUNT = 100
 
 
 argp = argparse.ArgumentParser(description="Particle collision visualizer")
