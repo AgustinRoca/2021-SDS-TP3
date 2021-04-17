@@ -76,7 +76,7 @@ public class Particle implements Comparable<Particle>{
         double relativeY = otherParticle.position.getY() - position.getY();
         double relativeVelocityX = otherParticle.getVelocityX() - getVelocityX();
         double relativeVelocityY = otherParticle.getVelocityY() - getVelocityY();
-        double distance = radius + otherParticle.radius;
+        double distance = position.getDistanceTo(otherParticle.position);
         double impulse = (2 * mass * otherParticle.mass * (relativeX * relativeVelocityX + relativeY * relativeVelocityY))/
                 (distance * (mass + otherParticle.mass));
         double impulseX = impulse * relativeX / distance;

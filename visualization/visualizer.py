@@ -31,6 +31,7 @@ simdata = dataparser.parse_output_file(OUTPUT_PATH)
 simdata.delta_time = DELTA_TIME
 print("Data parsed")
 
+
 def get_circles_list(simdata):
     circles = []
     for k in simdata.particles:
@@ -39,6 +40,7 @@ def get_circles_list(simdata):
         circles.append(circle)
     return circles
 
+
 def get_annotations(simdata):
     annotations = {}
     for k in simdata.particles:
@@ -46,10 +48,12 @@ def get_annotations(simdata):
         annotations[k] = plt.annotate(k, (p.x, p.y), ha='center', va='center')
     return annotations
 
-def update_annotations(simdata,annotations):
+
+def update_annotations(simdata, annotations):
     for k in simdata.particles:
         p = simdata.particles[k]
-        annotations[k].set_position((p.x,p.y))
+        annotations[k].set_position((p.x, p.y))
+
 
 def update_func(frame, *fargs):
     global simdata
@@ -60,10 +64,11 @@ def update_func(frame, *fargs):
         simdata.restart()
     else:
         simdata.update_particles_on_time()
-    update_annotations(simdata,annotations)
+    update_annotations(simdata, annotations)
     patch_collection.set_paths(get_circles_list(simdata))
     ax.set_title(get_title(simdata), fontdict={'fontsize': 20})
     return patch_collection    
+
 
 def get_title(simdata):
     return f"Particles:{simdata.particle_count}  Time:{simdata.time:.2f}"

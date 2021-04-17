@@ -29,11 +29,7 @@ public class SimulationApp {
             throw new RuntimeException("File " + DEFAULT_INPUT_FILENAME + " not found");
         }
 
-        Set<Particle> particles = new HashSet<>();
-        for (Particle particle : results.getParticles()){
-            particles.add(new Particle(particle));
-        }
-        List<SimulationRecord> records = simulate(particles, results.getSpaceSize());
+        List<SimulationRecord> records = simulate(results.getParticles(), results.getSpaceSize());
 
         StringBuilder str = new StringBuilder(results.toString());
         for (SimulationRecord record : records){
@@ -60,7 +56,17 @@ public class SimulationApp {
 
     }
 
-    private static List<SimulationRecord> simulate(Set<Particle> particles, double spaceSize){
+    private static List<SimulationRecord> simulate(Set<Particle> particleSet, double spaceSize){
+        // Clone the set to ensure that I am not changing the original Set
+        double bigParticleRadius = -1;
+        Set<Particle> particles = new HashSet<>();
+        for (Particle particle : particleSet){
+            if(bigParticleRadius == -1 || particle.getRadius() > bigParticleRadius){
+                bigParticleRadius = particle.getRadius();
+            }
+            particles.add(new Particle(particle));
+        }
+
         List<Collision> possibleCollisions = new LinkedList<>();
         List<SimulationRecord> records = new LinkedList<>();
 
@@ -75,7 +81,8 @@ public class SimulationApp {
 
 
         double time = 0;
-        while(!possibleCollisions.isEmpty() &&  time < MAX_TIME){
+        boolean bigTouchWall = false;
+        while(!possibleCollisions.isEmpty() &&  time < MAX_TIME && !bigTouchWall){
             Collision nextCollision = possibleCollisions.get(0);
             possibleCollisions.remove(nextCollision);
 
@@ -86,28 +93,43 @@ public class SimulationApp {
                 }
                 time += nextCollision.getTime();
 
-                // Change velocities of involved particles
-                nextCollision.applyCollision();
+                if(isBigParticleAgainstWallCollision(nextCollision, bigParticleRadius)){
+                    bigTouchWall = true;
+                } else {
+                    // Change velocities of involved particles
+                    nextCollision.applyCollision();
 
-                // Update the remaining time of other collisions
-                for (Collision collision : possibleCollisions){
-                    collision.setTime(collision.getTime() - nextCollision.getTime());
-                }
-
-                Set<Particle> particlesStates = new HashSet<>();
-                for(Particle particle : nextCollision.getParticlesInvolved()) {
-                    // Record the change of velocities
-                    particlesStates.add(new Particle(particle));
+                    // Update the remaining time of other collisions
+                    for (Collision collision : possibleCollisions) {
+                        collision.setTime(collision.getTime() - nextCollision.getTime());
+                    }
 
                     // Calculate new possible collisions
-                    Collision newCollision = getEarliestCollision(particle, particles, spaceSize);
-                    orderedAdd(possibleCollisions, newCollision);
+                    for (Particle particle : nextCollision.getParticlesInvolved()) {
+                        Collision newCollision = getEarliestCollision(particle, particles, spaceSize);
+                        orderedAdd(possibleCollisions, newCollision);
+                    }
+                }
 
+                // Record the collision
+                Set<Particle> particlesStates = new HashSet<>();
+                for (Particle particle : nextCollision.getParticlesInvolved()) {
+                    particlesStates.add(new Particle(particle));
                 }
                 records.add(new SimulationRecord(time, particlesStates));
             }
         }
         return records;
+    }
+
+    private static boolean isBigParticleAgainstWallCollision(Collision nextCollision, double bigParticleRadius) {
+        boolean isWallCollision = nextCollision.getParticlesInvolved().size() == 1;
+        if(isWallCollision){
+            Optional<Particle> particleOptional = nextCollision.getParticlesInvolved().stream().findFirst();
+            return particleOptional.filter(particle -> particle.getRadius() == bigParticleRadius).isPresent();
+        } else {
+            return false;
+        }
     }
 
     private static void orderedAdd(List<Collision> collisions, Collision collision) {
@@ -185,6 +207,7 @@ public class SimulationApp {
         } else {
             timeUntilCollision = (particle.getRadius() - particle.getPosition().getX()) / particle.getVelocityX();
         }
+        timeUntilCollision = Math.max(0, timeUntilCollision);
         return new VerticalWallCollision(timeUntilCollision, particle);
 
     }
@@ -198,6 +221,7 @@ public class SimulationApp {
         } else {
             timeUntilCollision = (particle.getRadius() - particle.getPosition().getY()) / particle.getVelocityY();
         }
+        timeUntilCollision = Math.max(0, timeUntilCollision);
         return new HorizontalWallCollision(timeUntilCollision, particle);
 
     }

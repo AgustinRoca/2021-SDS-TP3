@@ -14,7 +14,7 @@ import java.util.List;
 
 public class InitialConfigurationGenerator {
     public static final double SPACE_SIZE = 6;
-    public static final int PARTICLES_QTY = 10;
+    public static final int PARTICLES_QTY = 145;
     public static final double SMALL_RADIUS = 0.2;
     public static final double BIG_RADIUS = 0.7;
     public static final double SMALL_MASS = 0.9;
@@ -23,22 +23,53 @@ public class InitialConfigurationGenerator {
     public static final Position INITIAL_BIG_POSITION = new Position(SPACE_SIZE/2, SPACE_SIZE/2);
     public static final Velocity INITIAL_BIG_VELOCITY = new Velocity(0,0);
     private static final String DEFAULT_INPUT_FILENAME = "./data/initialSetup.txt";
-    private static final int MAX_ATTEMPTS = 10000;
+    private static final int MAX_ATTEMPTS = 1_000_000;
 
 
     public static void main(String[] args){
+        List<Particle> particles = randomParticlesGenerator(PARTICLES_QTY, SPACE_SIZE);
+        printInFile(particles, SPACE_SIZE, DEFAULT_INPUT_FILENAME);
+    }
+
+    private static void printInFile(List<Particle> particles, double spaceSize, String filename) {
+        StringBuilder str = new StringBuilder();
+        str.append(spaceSize).append('\n');
+        str.append(particles.size()).append('\n');
+        for (Particle particle : particles){
+            str.append(particle.toFileString());
+        }
+
+        // check file
+        File inputFile = new File(Paths.get(filename).toAbsolutePath().toString());
+        if(!inputFile.getParentFile().exists()){
+            if(!inputFile.getParentFile().mkdirs()){
+                System.err.println("Input's folder does not exist and could not be created");
+                System.exit(1);
+            }
+        }
+
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(Paths.get(DEFAULT_INPUT_FILENAME).toAbsolutePath().toString(), false));
+            writer.write(str.toString());
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static List<Particle> randomParticlesGenerator(long particleQty, double spaceSize){
         List<Particle> particles = new ArrayList<>();
         Particle bigParticle = new Particle(0, BIG_MASS, BIG_RADIUS, INITIAL_BIG_POSITION, INITIAL_BIG_VELOCITY);
         particles.add(bigParticle);
 
-        for(int particleNumber = 0; particleNumber < PARTICLES_QTY; particleNumber++){
+        for(int particleNumber = 0; particleNumber < particleQty; particleNumber++){
             Position possiblePosition = null;
             boolean isValid = false;
             int attempts = 0;
             while(!isValid){
                 isValid = true;
-                double possibleX = SMALL_RADIUS + Math.random() * (SPACE_SIZE - 2*SMALL_RADIUS);
-                double possibleY = SMALL_RADIUS + Math.random() * (SPACE_SIZE - 2*SMALL_RADIUS);
+                double possibleX = SMALL_RADIUS + Math.random() * (spaceSize - 2*SMALL_RADIUS);
+                double possibleY = SMALL_RADIUS + Math.random() * (spaceSize - 2*SMALL_RADIUS);
                 possiblePosition = new Position(possibleX, possibleY);
                 for(Particle particle: particles){
                     if(possiblePosition.getDistanceTo(particle.getPosition()) < SMALL_RADIUS + particle.getRadius()){
@@ -55,29 +86,7 @@ public class InitialConfigurationGenerator {
             Velocity velocity = new Velocity(speed * Math.cos(velocityAngle), speed * Math.sin(velocityAngle));
             particles.add(new Particle(particles.size(), SMALL_MASS, SMALL_RADIUS, possiblePosition, velocity));
         }
-
-        StringBuilder str = new StringBuilder();
-        str.append(SPACE_SIZE).append('\n');
-        str.append(PARTICLES_QTY).append('\n');
-        for (Particle particle : particles){
-            str.append(particle.toFileString());
-        }
-
-        // check file
-        File inputFile = new File(Paths.get(DEFAULT_INPUT_FILENAME).toAbsolutePath().toString());
-        if(!inputFile.getParentFile().exists()){
-            if(!inputFile.getParentFile().mkdirs()){
-                System.err.println("Input's folder does not exist and could not be created");
-                System.exit(1);
-            }
-        }
-
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(Paths.get(DEFAULT_INPUT_FILENAME).toAbsolutePath().toString(), false));
-            writer.write(str.toString());
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return particles;
     }
+
 }
