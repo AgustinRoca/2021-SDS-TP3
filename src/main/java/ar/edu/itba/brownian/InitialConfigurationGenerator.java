@@ -14,7 +14,7 @@ import java.util.List;
 
 public class InitialConfigurationGenerator {
     public static final double SPACE_SIZE = 6;
-    public static final int PARTICLES_QTY = 145;
+    public static final int PARTICLES_QTY = 147;
     public static final double SMALL_RADIUS = 0.2;
     public static final double BIG_RADIUS = 0.7;
     public static final double SMALL_MASS = 0.9;
@@ -23,11 +23,23 @@ public class InitialConfigurationGenerator {
     public static final Position INITIAL_BIG_POSITION = new Position(SPACE_SIZE/2, SPACE_SIZE/2);
     public static final Velocity INITIAL_BIG_VELOCITY = new Velocity(0,0);
     private static final String DEFAULT_INPUT_FILENAME = "./data/initialSetup.txt";
-    private static final int MAX_ATTEMPTS = 1_000_000;
+    private static final long MAX_ATTEMPTS = 10_000_000L;
 
 
     public static void main(String[] args){
-        List<Particle> particles = randomParticlesGenerator(PARTICLES_QTY, SPACE_SIZE);
+        List<Particle> particles = null;
+        boolean done = false;
+        for (int attempt = 0; attempt < 1000 && !done; attempt++) {
+            try {
+                particles = randomParticlesGenerator(PARTICLES_QTY, SPACE_SIZE);
+                done = true;
+            } catch (RuntimeException e){
+                System.out.println("Attempt #" + attempt + ": Failed");
+                if (attempt == (1000 - 1)){
+                    throw new RuntimeException("Could not arrange particles");
+                }
+            }
+        }
         printInFile(particles, SPACE_SIZE, DEFAULT_INPUT_FILENAME);
     }
 
@@ -77,15 +89,20 @@ public class InitialConfigurationGenerator {
                     }
                 }
                 attempts++;
+                if(attempts > MAX_ATTEMPTS){
+                    throw new RuntimeException("Could not arrange particles");
+                }
             }
-            if(attempts > MAX_ATTEMPTS){
-                throw new RuntimeException("Could not arrange particles");
-            }
+
             double velocityAngle = Math.random() * 2 * Math.PI;
             double speed = Math.random() * SMALL_MAX_SPEED;
             Velocity velocity = new Velocity(speed * Math.cos(velocityAngle), speed * Math.sin(velocityAngle));
             particles.add(new Particle(particles.size(), SMALL_MASS, SMALL_RADIUS, possiblePosition, velocity));
+            if((particleNumber % (particleQty/10)) == 0){
+                System.out.println(particleNumber + "/" + particleQty + " = " + (double) particleNumber / particleQty * 100 + "%");
+            }
         }
+        System.out.println(particleQty + "/" + particleQty + " = 100%");
         return particles;
     }
 

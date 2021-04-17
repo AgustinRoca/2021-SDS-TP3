@@ -72,8 +72,10 @@ public class SimulationApp {
 
         // First round: Calculate first collisions of every particle
         for (Particle particle : particles){
-            List<Collision> collisions = getEarliestCollisions(particle, particles, spaceSize);
-            possibleCollisions.addAll(collisions);
+            Collision collision = getEarliestCollision(particle, particles, spaceSize);
+            if(collision != null) {
+                possibleCollisions.add(collision);
+            }
         }
         Collections.sort(possibleCollisions); // Sort ascending by time
 
@@ -103,11 +105,22 @@ public class SimulationApp {
                     }
 
                     // Calculate new possible collisions
+                    Set<Particle> particlesToRecalculate = new HashSet<>();
                     for (Particle particle : nextCollision.getParticlesInvolved()) {
-                        List<Collision> newCollisions = getEarliestCollisions(particle, particles, spaceSize);
-                        for (Collision newCollision : newCollisions) {
-                            orderedAdd(possibleCollisions, newCollision);
+                        particlesToRecalculate.add(particle);
+                        for (Collision collision : possibleCollisions){
+                            if(collision.getParticlesInvolved().size() == 2 && collision.getParticlesInvolved().contains(particle)){
+                                for (Particle particleInCollision : collision.getParticlesInvolved()){
+                                    if (!particleInCollision.equals(particle)) {
+                                        particlesToRecalculate.add(particleInCollision);
+                                    }
+                                }
+                            }
                         }
+                    }
+                    for (Particle particleToRecalculate : particlesToRecalculate) {
+                        Collision newCollision = getEarliestCollision(particleToRecalculate, particles, spaceSize);
+                        orderedAdd(possibleCollisions, newCollision);
                     }
                 }
 
@@ -149,19 +162,27 @@ public class SimulationApp {
         }
     }
 
-    private static List<Collision> getEarliestCollisions(Particle particle, Set<Particle> particles, double spaceSize) {
+    private static Collision getEarliestCollision(Particle particle, Set<Particle> particles, double spaceSize) {
 
-        List<Collision> collisions = new ArrayList<>(2);
-        Collision wallCollision = earliestWallCollision(particle, spaceSize);
-        Collision particleCollision = earliestParticleCollision(particle, particles);
-        if(wallCollision != null) {
-            collisions.add(wallCollision);
-        }
-        if(particleCollision != null) {
-            collisions.add(particleCollision);
+        List<Collision> collisions = new ArrayList<>(3);
+        collisions.add(horizontalWallCollision(particle, spaceSize));
+        collisions.add(verticalWallCollision(particle, spaceSize));
+        collisions.add(earliestParticleCollision(particle, particles));
+        Collision earliestCollision = null;
+
+        for (Collision collision : collisions) {
+            if(collision != null) {
+                if(earliestCollision == null || collision.getTime() < earliestCollision.getTime()) {
+                    earliestCollision = collision;
+                }
+            }
         }
 
-        return collisions;
+        if(earliestCollision != null && earliestCollision.getTime() < 0){
+            earliestCollision.setTime(0);
+        }
+
+        return earliestCollision;
     }
 
     private static Collision earliestParticleCollision(Particle particle, Set<Particle> particles){
@@ -187,30 +208,6 @@ public class SimulationApp {
                 }
             }
         }
-        if(earliestCollision != null && earliestCollision.getTime() < 0) {
-            earliestCollision.setTime(0);
-        }
-        return earliestCollision;
-    }
-
-    private static Collision earliestWallCollision(Particle particle, double spaceSize){
-        List<Collision> collisions = new ArrayList<>(2);
-        collisions.add(horizontalWallCollision(particle, spaceSize));
-        collisions.add(verticalWallCollision(particle, spaceSize));
-        Collision earliestCollision = null;
-
-        for (Collision collision : collisions) {
-            if(collision != null) {
-                if(earliestCollision == null || collision.getTime() < earliestCollision.getTime()) {
-                    earliestCollision = collision;
-                }
-            }
-        }
-
-        if(earliestCollision != null && earliestCollision.getTime() < 0){
-            earliestCollision.setTime(0);
-        }
-
         return earliestCollision;
     }
 

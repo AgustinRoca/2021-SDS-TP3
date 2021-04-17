@@ -59,12 +59,12 @@ def update_func(frame, *fargs):
     global simdata
     global patch_collection
     global ax
-    global annotations
+    # global annotations
     if frame == 0:
         simdata.restart()
     else:
         simdata.update_particles_on_time()
-    update_annotations(simdata, annotations)
+    # update_annotations(simdata, annotations)
     patch_collection.set_paths(get_circles_list(simdata))
     ax.set_title(get_title(simdata), fontdict={'fontsize': 20})
     return patch_collection    
@@ -84,7 +84,7 @@ ax.set_xticks(minor_ticks_x, minor=True)
 ax.set_yticks(minor_ticks_y, minor=True)
 
 patch_collection = clt.PatchCollection(get_circles_list(simdata))
-annotations = get_annotations(simdata)
+# annotations = get_annotations(simdata)
 ax.add_collection(patch_collection)
 
 # calcualate save count
