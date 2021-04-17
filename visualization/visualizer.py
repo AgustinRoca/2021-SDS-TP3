@@ -15,6 +15,9 @@ DELTA_TIME = 0.01
 SAVE_COUNT = 100
 REPEAT_DELAY = 1000
 REPEAT = True
+ANIMATIONS_PATH = "animations"
+ANIMATIONS_FILENAME = "animation"
+save_video = True
 
 
 argp = argparse.ArgumentParser(description="Particle collision visualizer")
@@ -30,6 +33,12 @@ print("Parsing data")
 simdata = dataparser.parse_output_file(OUTPUT_PATH)
 simdata.delta_time = DELTA_TIME
 print("Data parsed")
+
+
+def print_progress_helper(frame,total,save_type):
+    aux = round(total/20)
+    if frame%aux == 0:
+        print("Progress saving {} file: {} of {} frames ({}%)".format(save_type,frame,total,math.floor((frame/total) * 100)))
 
 
 def get_circles_list(simdata):
@@ -104,4 +113,11 @@ ani = FuncAnimation(
 plt.axis('scaled')
 plt.xlim([0, simdata.sim_side])
 plt.ylim([0, simdata.sim_side])
+if save_video:
+    if not os.path.exists(ANIMATIONS_PATH):
+        os.makedirs(ANIMATIONS_PATH)
+    print("Saving videos")
+    ani.save(os.path.join(ANIMATIONS_PATH, ANIMATIONS_FILENAME + ".avi"), progress_callback=lambda f, t: print_progress_helper(f, t, "avi"))
+    ani.save(os.path.join(ANIMATIONS_PATH, ANIMATIONS_FILENAME + ".gif"), progress_callback=lambda f, t: print_progress_helper(f, t, "gif"))
+    print("Videos saved")
 plt.show()
