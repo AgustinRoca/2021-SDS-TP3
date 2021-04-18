@@ -1,7 +1,4 @@
 package ar.edu.itba.brownian.models;
-
-import com.sun.istack.internal.NotNull;
-
 import java.util.Objects;
 
 public class Particle implements Comparable<Particle>{
@@ -12,7 +9,7 @@ public class Particle implements Comparable<Particle>{
     private final Velocity velocity;
     private long collisionQty = 0;
 
-    public Particle(@NotNull Particle particle){
+    public Particle(Particle particle){
         id = particle.id;
         mass = particle.mass;
         radius = particle.radius;

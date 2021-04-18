@@ -6,10 +6,13 @@ compile:$(JAVA_SOURCES)
 	javac -d $(OUT_FOLDER) $(JAVA_SOURCES)
 
 run:compile
-	java -cp $(OUT_FOLDER)  ar.edu.itba.brownian.SimulationApp
+	java -cp $(OUT_FOLDER) ar.edu.itba.brownian.SimulationApp
+
+experiment:compile
+	java -cp $(OUT_FOLDER) ar.edu.itba.brownian.ExperimentGenerator
 
 init:compile
-	java -cp $(OUT_FOLDER)  ar.edu.itba.brownian.InitialConfigurationGenerator
+	java -cp $(OUT_FOLDER) ar.edu.itba.brownian.InitialConfigurationGenerator
 
 visualizer:compile run
 	cd visualization
