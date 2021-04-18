@@ -43,7 +43,7 @@ public class InitialConfigurationGenerator {
         printInFile(particles, SPACE_SIZE, DEFAULT_INPUT_FILENAME);
     }
 
-    private static void printInFile(List<Particle> particles, double spaceSize, String filename) {
+    public static void printInFile(List<Particle> particles, double spaceSize, String filename) {
         StringBuilder str = new StringBuilder();
         str.append(spaceSize).append('\n');
         str.append(particles.size()).append('\n');
@@ -61,7 +61,7 @@ public class InitialConfigurationGenerator {
         }
 
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(Paths.get(DEFAULT_INPUT_FILENAME).toAbsolutePath().toString(), false));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(Paths.get(filename).toAbsolutePath().toString(), false));
             writer.write(str.toString());
             writer.close();
         } catch (IOException e) {
@@ -98,12 +98,34 @@ public class InitialConfigurationGenerator {
             double speed = Math.random() * SMALL_MAX_SPEED;
             Velocity velocity = new Velocity(speed * Math.cos(velocityAngle), speed * Math.sin(velocityAngle));
             particles.add(new Particle(particles.size(), SMALL_MASS, SMALL_RADIUS, possiblePosition, velocity));
-            if((particleNumber % (particleQty/10)) == 0){
-                System.out.println(particleNumber + "/" + particleQty + " = " + (double) particleNumber / particleQty * 100 + "%");
-            }
         }
-        System.out.println(particleQty + "/" + particleQty + " = 100%");
         return particles;
+    }
+
+    public static List<List<Particle>> randomParticlesGenerator(long particleQty, double spaceSize, int iterationsQty){
+        List<List<Particle>> initialConfigurations = new ArrayList<>(iterationsQty);
+
+        for (int iteration = 0; iteration < iterationsQty; iteration++) {
+            List<Particle> particles = null;
+            boolean done = false;
+            for (int attempt = 0; attempt < 1000 && !done; attempt++) {
+                try {
+                    particles = InitialConfigurationGenerator.randomParticlesGenerator(particleQty, spaceSize);
+                    done = true;
+                } catch (RuntimeException e) {
+                    System.out.println("Attempt #" + iteration + "." + attempt + ": Failed");
+                    if (attempt == (1000 - 1)) {
+                        throw new RuntimeException("Could not arrange particles");
+                    }
+                }
+            }
+            if (particles == null){
+                throw new RuntimeException("Unknown error while arranging particles");
+            }
+            initialConfigurations.add(particles);
+            System.out.println("Simulation " + iteration + " done");
+        }
+        return initialConfigurations;
     }
 
 }

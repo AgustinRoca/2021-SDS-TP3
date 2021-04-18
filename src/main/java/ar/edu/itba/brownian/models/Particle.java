@@ -52,6 +52,15 @@ public class Particle implements Comparable<Particle>{
         return velocity.getVelocityY();
     }
 
+    public void setVelocity(double velocityX, double velocityY){
+        velocity.setVelocityX(velocityX);
+        velocity.setVelocityY(velocityY);
+    }
+
+    public double getSpeed() {
+        return Math.sqrt(getVelocityX() * getVelocityX() + getVelocityY() * getVelocityY());
+    }
+
     public long getCollisionQty() {
         return collisionQty;
     }

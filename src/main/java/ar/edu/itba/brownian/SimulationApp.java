@@ -18,7 +18,7 @@ import java.util.*;
 public class SimulationApp {
     private static final String DEFAULT_INPUT_FILENAME = "./data/initialSetup.txt";
     private static final String DEFAULT_OUTPUT_FILENAME = "./data/output.txt";
-    private static final double MAX_TIME = 10;
+    private static final double MAX_TIME = 30;
 
     public static void main(String[] args) {
         ParseResults results;
@@ -29,7 +29,7 @@ public class SimulationApp {
             throw new RuntimeException("File " + DEFAULT_INPUT_FILENAME + " not found");
         }
 
-        List<SimulationRecord> records = simulate(results.getParticles(), results.getSpaceSize());
+        List<SimulationRecord> records = simulate(results.getParticles(), results.getSpaceSize(), MAX_TIME);
 
         StringBuilder str = new StringBuilder(results.toString());
         for (SimulationRecord record : records){
@@ -56,7 +56,7 @@ public class SimulationApp {
 
     }
 
-    private static List<SimulationRecord> simulate(Set<Particle> particleSet, double spaceSize){
+    public static List<SimulationRecord> simulate(Collection<Particle> particleSet, double spaceSize, double maxTime){
         // Clone the set to ensure that I am not changing the original Set
         double bigParticleRadius = -1;
         Set<Particle> particles = new HashSet<>();
@@ -82,7 +82,7 @@ public class SimulationApp {
 
         double time = 0;
         boolean bigTouchWall = false;
-        while(!possibleCollisions.isEmpty() &&  time < MAX_TIME && !bigTouchWall){
+        while(!possibleCollisions.isEmpty() &&  time < maxTime && !bigTouchWall){
             Collision nextCollision = possibleCollisions.get(0);
             possibleCollisions.remove(nextCollision);
 
@@ -237,13 +237,21 @@ public class SimulationApp {
 
     }
 
-    private static class SimulationRecord {
+    public static class SimulationRecord {
         private final double time;
         private final Set<Particle> particlesStates;
 
         public SimulationRecord(double time, Set<Particle> particlesStates) {
             this.time = time;
             this.particlesStates = particlesStates;
+        }
+
+        public double getTime() {
+            return time;
+        }
+
+        public Set<Particle> getParticlesStates() {
+            return particlesStates;
         }
     }
 }
