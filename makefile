@@ -17,3 +17,9 @@ init:compile
 visualizer:compile run
 	cd visualization
 	bash -c "source .env/bin/activate; python visualizer.py"
+
+test_graphs_without_java:
+	cd visualization
+	bash -c "source .env/bin/activate; python test_graphs.py"
+
+test_graphs:compile experiment test_graphs_without_java
