@@ -3,7 +3,7 @@ from matplotlib.path import Path
 import matplotlib.patches as patches
 from matplotlib import cm
 
-temperature_file = open("../data/temperatures.txt","r")
+temperature_file = open("../data/testResults/temperatures.txt","r")
 
 sim_side = float(temperature_file.readline().strip())
 
@@ -23,11 +23,11 @@ ax = plt.gca()
 ax.figure.set_size_inches((12,12))
 
 total_temperatures = len(tpaths)
-color_mapper = cm.get_cmap('nipy_spectral',total_temperatures)
+color_mapper = cm.get_cmap("nipy_spectral",total_temperatures + 4)
 my_patches = []
 my_labels = []
 for i,p in enumerate(tpaths):
-    pat = patches.PathPatch(p,facecolor="none",edgecolor=color_mapper(i),lw=1)
+    pat = patches.PathPatch(p,facecolor="none",edgecolor=color_mapper(2*i + 1),lw=1)
     ax.add_patch(pat)
     my_patches.append(pat)
     my_labels.append( "Temperatura " + str(i) )
