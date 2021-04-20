@@ -11,7 +11,7 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class ExperimentGenerator {
-    private static final int ITERATIONS_QTY = 10;
+    private static final int ITERATIONS_QTY = 100;
     private static final int PARTICLES_QTY = 140;
     private static final double SPACE_SIZE = 6;
     public static final double SMALL_MAX_SPEED_COLD = 1;
@@ -259,7 +259,7 @@ public class ExperimentGenerator {
         }
 
         StringBuilder dcmStr = new StringBuilder();
-        dcmStr.append(TIME_INTERVAL).append('\n');
+        dcmStr.append(TIME_INTERVAL).append(' ').append(MAX_TIME / 2).append('\n');
         for (Double bigDcm : bigDcms) {
             dcmStr.append(bigDcm).append(' ');
         }

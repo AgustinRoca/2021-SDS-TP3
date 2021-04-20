@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-TEST_RESULTS_FILEPATH = "../data/speeds.txt"
+TEST_RESULTS_FILEPATH = "../data/testResults/speeds.txt"
 
 
 test_file = open(TEST_RESULTS_FILEPATH, "r")
