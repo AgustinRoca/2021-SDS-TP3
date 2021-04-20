@@ -31,8 +31,10 @@ plt.gca().figure.set_size_inches((12, 12))
 
 plt.bar(
     x=list(map(lambda x:x["group"],groups)),
-    height=list(map(lambda x:x["qty"],groups)),
+    height=list(map(lambda x:x["prob"],groups)),
     width=interval,
     align="edge"
     )
+
+# TODO: calculate frequency and display it
 plt.show()
