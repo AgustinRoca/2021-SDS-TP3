@@ -31,7 +31,7 @@ public class InitialConfigurationGenerator {
         boolean done = false;
         for (int attempt = 0; attempt < 1000 && !done; attempt++) {
             try {
-                particles = randomParticlesGenerator(PARTICLES_QTY, SPACE_SIZE);
+                particles = randomParticlesGenerator(PARTICLES_QTY, SPACE_SIZE, SMALL_MAX_SPEED);
                 done = true;
             } catch (RuntimeException e){
                 System.out.println("Attempt #" + attempt + ": Failed");
@@ -69,7 +69,7 @@ public class InitialConfigurationGenerator {
         }
     }
 
-    public static List<Particle> randomParticlesGenerator(long particleQty, double spaceSize){
+    public static List<Particle> randomParticlesGenerator(long particleQty, double spaceSize, double maxSpeed){
         List<Particle> particles = new ArrayList<>();
         Particle bigParticle = new Particle(0, BIG_MASS, BIG_RADIUS, INITIAL_BIG_POSITION, INITIAL_BIG_VELOCITY);
         particles.add(bigParticle);
@@ -95,14 +95,14 @@ public class InitialConfigurationGenerator {
             }
 
             double velocityAngle = Math.random() * 2 * Math.PI;
-            double speed = Math.random() * SMALL_MAX_SPEED;
+            double speed = Math.random() * maxSpeed;
             Velocity velocity = new Velocity(speed * Math.cos(velocityAngle), speed * Math.sin(velocityAngle));
             particles.add(new Particle(particles.size(), SMALL_MASS, SMALL_RADIUS, possiblePosition, velocity));
         }
         return particles;
     }
 
-    public static List<List<Particle>> randomParticlesGenerator(long particleQty, double spaceSize, int iterationsQty){
+    public static List<List<Particle>> randomParticlesGenerator(long particleQty, double spaceSize, int iterationsQty, double maxSpeed){
         List<List<Particle>> initialConfigurations = new ArrayList<>(iterationsQty);
 
         for (int iteration = 0; iteration < iterationsQty; iteration++) {
@@ -110,7 +110,7 @@ public class InitialConfigurationGenerator {
             boolean done = false;
             for (int attempt = 0; attempt < 1000 && !done; attempt++) {
                 try {
-                    particles = InitialConfigurationGenerator.randomParticlesGenerator(particleQty, spaceSize);
+                    particles = InitialConfigurationGenerator.randomParticlesGenerator(particleQty, spaceSize, maxSpeed);
                     done = true;
                 } catch (RuntimeException e) {
                     System.out.println("Attempt #" + iteration + "." + attempt + ": Failed");
