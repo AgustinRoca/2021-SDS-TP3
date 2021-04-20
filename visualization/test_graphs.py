@@ -1,3 +1,5 @@
+import matplotlib.pyplot as plt
+
 FILE_PATH = '../data/testResults.txt'
 SEPARATOR = ' '
 TEST_TYPE_SEPARATOR = '\n'
@@ -35,6 +37,4 @@ while line != '\n':
     for small_squared_displacement_string in small_squared_displacement_strings:
         small_squared_displacements.append(float(small_squared_displacement_string))
     line = f.readline()
-
-
 
