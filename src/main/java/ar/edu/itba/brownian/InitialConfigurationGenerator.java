@@ -123,7 +123,7 @@ public class InitialConfigurationGenerator {
                 throw new RuntimeException("Unknown error while arranging particles");
             }
             initialConfigurations.add(particles);
-            System.out.println("Simulation " + iteration + " done");
+            System.out.println("Generation " + iteration + " done");
         }
         return initialConfigurations;
     }

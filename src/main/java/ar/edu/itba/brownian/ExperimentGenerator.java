@@ -11,7 +11,7 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class ExperimentGenerator {
-    private static final int ITERATIONS_QTY = 100;
+    private static final int ITERATIONS_QTY = 200;
     private static final int PARTICLES_QTY = 140;
     private static final double SPACE_SIZE = 6;
     public static final double SMALL_MAX_SPEED_COLD = 1;
@@ -32,8 +32,11 @@ public class ExperimentGenerator {
         List<List<Particle>> initialConfigurations = InitialConfigurationGenerator.randomParticlesGenerator(PARTICLES_QTY, SPACE_SIZE, ITERATIONS_QTY, SMALL_MAX_SPEED_NORMAL);
         System.out.println("Initial configurations generated");
         List<List<SimulationApp.SimulationRecord>> records = new ArrayList<>(ITERATIONS_QTY);
+        int simulationNumber = 0;
         for (List<Particle> particles : initialConfigurations) {
             records.add(SimulationApp.simulate(particles, SPACE_SIZE, MAX_TIME));
+            simulationNumber++;
+            System.out.println("Simulation " + simulationNumber + " done");
         }
         List<List<SimulationApp.SimulationRecord>> differentTemperaturesRecords = new ArrayList<>(3);
         List<List<Particle>> initialTemperatureConfigurations = new ArrayList<>(3);
@@ -166,8 +169,19 @@ public class ExperimentGenerator {
         return results;
     }
 
-    private static int chooseParticleIdToFollow(List<Particle> particles) { // TODO: Choose a particle near the middle
-        return 1;
+    private static int chooseParticleIdToFollow(List<Particle> particles) {
+        double minDistance = -1;
+        int minId = 0;
+        for (Particle particle : particles){
+            if(particle.getId() != 0){
+               double distance = particle.getPosition().getDistanceTo(new Position(SPACE_SIZE/2, SPACE_SIZE/2));
+               if(minDistance == -1 || minDistance > distance){
+                   minDistance = distance;
+                   minId = particle.getId();
+               }
+            }
+        }
+        return minId;
     }
 
     private static void printInFiles(ExperimentResults results) {
