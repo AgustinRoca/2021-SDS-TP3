@@ -14,12 +14,21 @@ experiment:compile
 init:compile
 	java -cp $(OUT_FOLDER) ar.edu.itba.brownian.InitialConfigurationGenerator
 
-visualizer:compile run
+# You should run run before any of this commands
+visualizer:
 	cd visualization
 	bash -c "source .env/bin/activate; python visualizer.py"
 
-test_graphs_without_java:
+# You should run experiment before any of this commands
+graph1:
 	cd visualization
-	bash -c "source .env/bin/activate; python test_graphs.py"
-
-test_graphs:compile experiment test_graphs_without_java
+	bash -c "source .env/bin/activate; python graph1.py"
+graph2:
+	cd visualization
+	bash -c "source .env/bin/activate; python graph2.py"
+graph3:
+	cd visualization
+	bash -c "source .env/bin/activate; python graph3.py"
+graph4:
+	cd visualization
+	bash -c "source .env/bin/activate; python graph4.py"
