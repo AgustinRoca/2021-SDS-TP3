@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import statistics as stats
 
-dcms_file = open("../data/dcms.txt","r")
+dcms_file = open("../data/testResults/dcms.txt","r")
 
 time_data = dcms_file.readline().strip().split(" ")
 interval = float(time_data[0])
@@ -29,11 +29,11 @@ ax2.plot(t_dcm_grande,dcm_chica)
 
 aux_dcm_grande = []
 for i in range(len(t_dcm_grande)):
-    aux_dcm_grande.append(dcm_grande[i]/(t_dcm_grande[i]))
+    aux_dcm_grande.append(dcm_grande[i]/(t_dcm_grande[i] * 2))
 
 aux_dcm_chica = []
 for i in range(len(t_dcm_chica)):
-    aux_dcm_chica.append(dcm_chica[i]/(t_dcm_chica[i]))
+    aux_dcm_chica.append(dcm_chica[i]/(t_dcm_chica[i] * 2))
 
 dcm_grande_val = stats.mean(aux_dcm_grande)
 dcm_grande_error = stats.stdev(aux_dcm_grande)
