@@ -32,8 +32,8 @@ for i,p in enumerate(tpaths):
     my_patches.append(pat)
     my_labels.append( "Temperatura " + str(i) )
 ax.legend(my_patches,my_labels)
-
-ax.set_xlim(0, sim_side)
-ax.set_ylim(0, sim_side)
+plt.axis('scaled')
+plt.xlim([0, sim_side])
+plt.ylim([0, sim_side])
 
 plt.show()
