@@ -36,7 +36,6 @@ plt.bar(
     align="edge"
     )
 
-# TODO: calculate frequency and display it
 cps_mean = stats.mean(cps)
 cps_error = stats.stdev(cps)
 print(f"cps mean;{cps_mean}")

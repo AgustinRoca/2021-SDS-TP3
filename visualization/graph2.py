@@ -87,4 +87,6 @@ plt.legend(
     )[0]],
     ["Inicial","Último tercio"]
 )
+plt.gca().tick_params(axis='both', which='major', labelsize=16)
+plt.gca().tick_params(axis='both', which='minor', labelsize=16)
 plt.show()
