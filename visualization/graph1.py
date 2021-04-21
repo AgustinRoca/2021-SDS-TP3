@@ -1,13 +1,13 @@
 import matplotlib.pyplot as plt
+import statistics as stats
 
-
-TEST_RESULTS_FILEPATH = "../data/testResults/collisions.txt"
+TEST_RESULTS_FILEPATH = "../data/collisions.txt"
 
 
 test_file = open(TEST_RESULTS_FILEPATH,"r")
 
 # collisions per second
-cps = map(float,test_file.readline().strip().split(" "))
+cps = list(map(float,test_file.readline().strip().split(" ")))
 # group interval time bettween collisions probability
 interval = float(test_file.readline().strip())
 # groups of time bettwen collisions probability
@@ -37,4 +37,9 @@ plt.bar(
     )
 
 # TODO: calculate frequency and display it
+cps_mean = stats.mean(cps)
+cps_error = stats.stdev(cps)
+print(f"cps mean;{cps_mean}")
+print(f"cps error:{cps_error}")
+
 plt.show()
