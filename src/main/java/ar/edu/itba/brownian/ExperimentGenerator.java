@@ -11,14 +11,14 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class ExperimentGenerator {
-    private static final int ITERATIONS_QTY = 200;
+    private static final int ITERATIONS_QTY = 100;
     private static final int PARTICLES_QTY = 140;
     private static final double SPACE_SIZE = 6;
-    public static final double SMALL_MAX_SPEED_COLD = 1;
-    public static final double SMALL_MAX_SPEED_NORMAL = 2;
-    public static final double SMALL_MAX_SPEED_HOT = 4;
-    private static final double MAX_TIME = 10;
-    private static final int INTERVALS_QTY = 50;
+    private static final double SMALL_MAX_SPEED_COLD = 1;
+    private static final double SMALL_MAX_SPEED_NORMAL = 2;
+    private static final double SMALL_MAX_SPEED_HOT = 4;
+    private static final double MAX_TIME = 15;
+    private static final int INTERVALS_QTY = 100;
     private static final double TIME_INTERVAL = MAX_TIME / INTERVALS_QTY;
     private static final double DELTA_COLLISIONS_TIME = 0.0001;
     private static final double DELTA_SPEED = 0.01;
@@ -137,9 +137,9 @@ public class ExperimentGenerator {
             boolean smallTouchedBorder = false;
             for (SimulationApp.SimulationRecord record : records.get(iterationNumber)) {
                 timeRemaining += record.getTime() - time;
+                bigParticle.moveStraightDuringTime(record.getTime() - time);
+                smallParticle.moveStraightDuringTime(record.getTime() - time);
                 time = record.getTime();
-                bigParticle.moveStraightDuringTime(timeRemaining);
-                smallParticle.moveStraightDuringTime(timeRemaining);
 
                 while (timeRemaining >= TIME_INTERVAL) {
                     if(time >= MAX_TIME / 2) {
@@ -258,7 +258,7 @@ public class ExperimentGenerator {
         }
 
         List<Double> smallDcms = new ArrayList<>(INTERVALS_QTY);
-        for (int t = 0; t < results.bigSquaredDisplacements.get(0).size(); t++) {
+        for (int t = 0; t < results.smallSquaredDisplacements.get(0).size(); t++) {
             smallDcms.add(0.0);
         }
 

@@ -18,7 +18,7 @@ import java.util.*;
 public class SimulationApp {
     private static final String DEFAULT_INPUT_FILENAME = "./data/initialSetup.txt";
     private static final String DEFAULT_OUTPUT_FILENAME = "./data/output.txt";
-    private static final double MAX_TIME = 30;
+    private static final double MAX_TIME = 15;
 
     public static void main(String[] args) {
         ParseResults results;

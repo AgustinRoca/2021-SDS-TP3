@@ -70,7 +70,6 @@ plt.legend(
     )[0]],
     ["Inicial","Último tercio"]
 )
-
 plt.show()
 
 plt.gca().figure.set_size_inches((16, 12))
@@ -89,4 +88,6 @@ plt.legend(
 )
 plt.gca().tick_params(axis='both', which='major', labelsize=16)
 plt.gca().tick_params(axis='both', which='minor', labelsize=16)
+plt.xlabel("Rapidez (m/s)")
+plt.ylabel("Densidad de probabilidad")
 plt.show()

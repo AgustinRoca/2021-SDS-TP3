@@ -35,6 +35,8 @@ plt.bar(
     width=interval,
     align="edge"
     )
+plt.xlabel("Tiempo entre colision (s)")
+plt.ylabel("Probabilidad")
 
 cps_mean = stats.mean(cps)
 cps_error = stats.stdev(cps)

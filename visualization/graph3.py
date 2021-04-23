@@ -35,5 +35,7 @@ ax.legend(my_patches,my_labels)
 plt.axis('scaled')
 plt.xlim([0, sim_side])
 plt.ylim([0, sim_side])
+plt.xlabel("X (m)")
+plt.ylabel("Y (m)")
 
 plt.show()

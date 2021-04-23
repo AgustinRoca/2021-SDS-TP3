@@ -14,7 +14,7 @@ import java.util.List;
 
 public class InitialConfigurationGenerator {
     public static final double SPACE_SIZE = 6;
-    public static final int PARTICLES_QTY = 147;
+    public static final int PARTICLES_QTY = 140;
     public static final double SMALL_RADIUS = 0.2;
     public static final double BIG_RADIUS = 0.7;
     public static final double SMALL_MASS = 0.9;
