@@ -23,19 +23,20 @@ ax = plt.gca()
 ax.figure.set_size_inches((12,12))
 
 total_temperatures = len(tpaths)
-color_mapper = cm.get_cmap("nipy_spectral",total_temperatures + 4)
+color_mapper = cm.get_cmap("nipy_spectral", total_temperatures + 4)
 my_patches = []
-my_labels = []
+my_labels = ["Fria", "Intermedia", "Caliente"]
 for i,p in enumerate(tpaths):
-    pat = patches.PathPatch(p,facecolor="none",edgecolor=color_mapper(2*i + 1),lw=1)
+    pat = patches.PathPatch(p, facecolor="none", edgecolor=color_mapper(2*i + 1), lw=1)
     ax.add_patch(pat)
     my_patches.append(pat)
-    my_labels.append( "Temperatura " + str(i) )
-ax.legend(my_patches,my_labels)
+    # my_labels.append( "Temperatura " + str(i) )
+ax.legend(my_patches, my_labels, prop={"size":16})
 plt.axis('scaled')
 plt.xlim([0, sim_side])
 plt.ylim([0, sim_side])
-plt.xlabel("X (m)")
-plt.ylabel("Y (m)")
-
+plt.xlabel("X (m)", fontsize=16)
+plt.ylabel("Y (m)", fontsize=16)
+plt.setp(ax.get_xticklabels(), fontsize=16)
+plt.setp(ax.get_yticklabels(), fontsize=16)
 plt.show()

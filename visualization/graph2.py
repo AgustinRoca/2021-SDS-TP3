@@ -88,6 +88,6 @@ plt.legend(
 )
 plt.gca().tick_params(axis='both', which='major', labelsize=16)
 plt.gca().tick_params(axis='both', which='minor', labelsize=16)
-plt.xlabel("Rapidez (m/s)")
-plt.ylabel("Densidad de probabilidad")
+plt.xlabel("Rapidez (m/s)", fontsize=16)
+plt.ylabel("Densidad de probabilidad", fontsize=16)
 plt.show()

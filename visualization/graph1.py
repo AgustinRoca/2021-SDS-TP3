@@ -35,12 +35,13 @@ plt.bar(
     width=interval,
     align="edge"
     )
-plt.xlabel("Tiempo entre colision (s)")
-plt.ylabel("Probabilidad")
+plt.xlabel("Tiempo entre colision (s)", fontsize=16)
+plt.ylabel("Probabilidad", fontsize=16)
 
 cps_mean = stats.mean(cps)
 cps_error = stats.stdev(cps)
 print(f"cps mean;{cps_mean}")
 print(f"cps error:{cps_error}")
-
+plt.setp(plt.gca().get_xticklabels(), fontsize=16)
+plt.setp(plt.gca().get_yticklabels(), fontsize=16)
 plt.show()

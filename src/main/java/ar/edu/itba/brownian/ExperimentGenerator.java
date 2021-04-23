@@ -11,13 +11,13 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class ExperimentGenerator {
-    private static final int ITERATIONS_QTY = 100;
+    private static final int ITERATIONS_QTY = 50;
     private static final int PARTICLES_QTY = 140;
     private static final double SPACE_SIZE = 6;
     private static final double SMALL_MAX_SPEED_COLD = 1;
     private static final double SMALL_MAX_SPEED_NORMAL = 2;
     private static final double SMALL_MAX_SPEED_HOT = 4;
-    private static final double MAX_TIME = 15;
+    private static final double MAX_TIME = 30;
     private static final int INTERVALS_QTY = 100;
     private static final double TIME_INTERVAL = MAX_TIME / INTERVALS_QTY;
     private static final double DELTA_COLLISIONS_TIME = 0.0001;
@@ -262,7 +262,7 @@ public class ExperimentGenerator {
             smallDcms.add(0.0);
         }
 
-        for (int iteration = 0; iteration < ITERATIONS_QTY; iteration++) {
+        for (int iteration = 0; iteration < results.smallSquaredDisplacements.size(); iteration++) {
             for (int t = 0; t < results.smallSquaredDisplacements.get(iteration).size(); t++) {
                 smallDcms.set(t, smallDcms.get(t) + results.smallSquaredDisplacements.get(iteration).get(t));
             }
